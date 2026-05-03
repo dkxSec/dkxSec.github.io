@@ -22,6 +22,24 @@
   - 在浏览器中重点复核 Hero、项目卡 hover 和技能矩阵 pulse 的强度是否过量
   - 如需更进一步，可继续加基于滚动的 section reveal，但应继续保持低幅度
 
+### Main / Homepage Comment Fixes
+
+- 完成事项：
+  - 将顶栏左上角站点缩写替换为用户提供的头像资源
+  - 为首页首个指标卡补充中文注解与说明文案
+  - 将项目卡左上角缩写文字切换为微软雅黑字族，改善中文显示
+- 修改文件：
+  - `public/avatar.jpg`
+  - `src/components/Header.astro`
+  - `src/pages/index.astro`
+- 验证：
+  - 使用 `.\tools\build.ps1` 完成 Astro 静态构建，通过
+- 风险 / 遗留：
+  - 当前头像直接采用 `public/` 资源直出，后续若需要统一裁切或压缩，可再补图片处理流程
+- 下一步建议：
+  - 在线上页面复核头像裁切位置与指标卡中文注解密度
+  - 如需统一中文气质，可再评估是否替换更多局部标题字体
+
 ### Main / Homepage UI Light Refresh
 
 - 完成事项：
