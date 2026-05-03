@@ -9,7 +9,7 @@ stack:
   - 'Tailwind CSS'
   - 'MDX'
   - 'GitHub Pages'
-repoUrl: 'https://github.com/dk6251'
+repoUrl: 'https://github.com/dkxSec'
 featured: true
 ---
 

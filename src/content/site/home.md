@@ -17,7 +17,7 @@ socialLinks:
   - label: 'Repositories'
     url: 'https://github.com/dkxSec?tab=repositories'
   - label: 'RSS'
-    url: 'https://dkxsec.github.io//rss.xml'
+    url: 'https://dkxsec.github.io/rss.xml'
 skills:
   - category: 'Languages'
     items:

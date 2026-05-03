@@ -54,6 +54,27 @@
 - 下一步建议：
   - 浏览器里复核两处链接在桌面端和移动端的字重与间距
 
+### Main / GitHub Identity Update
+
+- 完成事项：
+  - 将仓库内旧 GitHub 账号引用从 `dk6251` 统一更新为 `dkxSec`
+  - 同步修正站点默认 URL、项目仓库链接、部署文档和站点内容中的旧账号引用
+  - 顺手修正首页站点内容里的 RSS 双斜杠链接
+- 修改文件：
+  - `src/consts.ts`
+  - `astro.config.mjs`
+  - `src/content/site/home.md`
+  - `src/content/projects/*`
+  - `docs/deploy-checklist.md`
+  - `docs/progress-log.md`
+- 验证：
+  - 使用 `rg` 复查旧链接残留，未再命中
+  - 使用 `.\tools\build.ps1` 完成 Astro 静态构建，通过
+- 风险 / 遗留：
+  - 本轮默认按账号和 GitHub Pages 域名都已切换到 `dkxSec / dkxsec.github.io` 处理；如果你只想改 GitHub 资料页、不改 Pages 域名，需要把站点 URL 与部署文档再切回
+- 下一步建议：
+  - 上线前确认 GitHub Pages 实际仓库名和 `SITE_URL` 环境变量与当前账号一致
+
 ### Main / Homepage UI Light Refresh
 
 - 完成事项：
@@ -147,7 +168,7 @@
 - 完成事项：
   - 清理默认 `blog` 模板路由和内容残留
   - 统一 `site / posts / projects` schema 与页面读取逻辑
-  - 修正错误占位资料为 `dkx / dk6251`
+  - 修正错误占位资料为 `dkx / dkxSec`
   - 实现首页、关于页、项目列表、文章列表、文章详情页、404、RSS
   - 修正导航、页脚、README、包名与根目录构建方式
   - 使用 `node .\\node_modules\\astro\\bin\\astro.mjs build` 完成静态构建验证

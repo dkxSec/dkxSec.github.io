@@ -3,8 +3,8 @@
 ## 1. 仓库准备
 
 1. 在 GitHub 上创建目标仓库。
-2. 如果要作为用户主页，仓库名使用 `dk6251.github.io`。
-3. 如果要作为项目站，仓库名可以保持当前项目名，最终地址会是 `https://dk6251.github.io/<repo>/`。
+2. 如果要作为用户主页，仓库名使用 `dkxsec.github.io`。
+3. 如果要作为项目站，仓库名可以保持当前项目名，最终地址会是 `https://dkxsec.github.io/<repo>/`。
 4. 在本地绑定远端：
 
 ```powershell
@@ -23,8 +23,8 @@ git push -u origin main
 
 推荐值：
 
-- 用户主页仓库：`https://dk6251.github.io`
-- 项目仓库：`https://dk6251.github.io/<repo>`
+- 用户主页仓库：`https://dkxsec.github.io`
+- 项目仓库：`https://dkxsec.github.io/<repo>`
 
 ## 3. 本地验证
 

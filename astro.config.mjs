@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 
-const site = process.env.SITE_URL ?? 'https://dk6251.github.io';
+const site = process.env.SITE_URL ?? 'https://dkxsec.github.io';
 const base = process.env.BASE_PATH ?? '/';
 
 // https://astro.build/config
