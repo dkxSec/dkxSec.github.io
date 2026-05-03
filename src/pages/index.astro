@@ -41,10 +41,14 @@ const metrics = [
 	{
 		label: 'Published Posts',
 		value: String(allPosts.length).padStart(2, '0'),
+		note: '已发布文章数',
+		description: '当前公开输出的文章与技术记录',
 	},
 	{
 		label: 'Focus Tracks',
 		value: String(site.data.focusAreas.length).padStart(2, '0'),
+		note: '重点方向数',
+		description: '长期关注的研究与工程主题范围',
 	},
 ];
 
@@ -134,7 +138,7 @@ const skillHighlights = site.data.skills.map((group) => ({
 	<section class="mt-18 motion-section">
 		<div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
 			<SectionHeading>Featured Projects</SectionHeading>
-			<a href="/projects" class="font-mono text-[0.78rem] uppercase tracking-[0.22em] no-underline">
+			<a href="/projects" class="section-more-link no-underline">
 				查看全部项目
 			</a>
 		</div>
@@ -173,7 +177,7 @@ const skillHighlights = site.data.skills.map((group) => ({
 	<section class="mt-18 motion-section">
 		<div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
 			<SectionHeading>Latest Writing</SectionHeading>
-			<a href="/posts" class="font-mono text-[0.78rem] uppercase tracking-[0.22em] no-underline">
+			<a href="/posts" class="section-more-link no-underline">
 				查看全部文章
 			</a>
 		</div>
@@ -326,6 +330,20 @@ const skillHighlights = site.data.skills.map((group) => ({
 		color: var(--color-blue-ink);
 		font-size: 0.74rem;
 		line-height: 1;
+	}
+
+	.section-more-link {
+		font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", var(--font-sans);
+		font-size: 0.98rem;
+		font-weight: 700;
+		letter-spacing: 0;
+		color: var(--color-blue-deep);
+		transition: color 180ms ease, transform 180ms ease;
+	}
+
+	.section-more-link:hover {
+		color: var(--color-blue-ink);
+		transform: translateX(2px);
 	}
 
 	.metric-card::after {

@@ -1,10 +1,10 @@
 ---
 name: 'dkx'
 title: 'GitHub Personal Site'
-subtitle: '计算机 / 人工智能 / 网络安全'
+subtitle: '计算机 / 网络安全 / 人工智能'
 description: '一个面向研究与工程落地的个人技术主页，用于整理项目、文章与长期技术积累。'
 updatedDate: 2026-05-03
-heroTitle: '构建面向研究与工程落地的个人技术主页'
+heroTitle: '保持热爱，奔赴山海'
 heroTagline: 'Research-minded builder, security-aware developer'
 focusAreas:
   - 'AI'
@@ -13,11 +13,11 @@ focusAreas:
   - 'Open Source'
 socialLinks:
   - label: 'GitHub'
-    url: 'https://github.com/dk6251'
+    url: 'https://github.com/dkxSec'
   - label: 'Repositories'
-    url: 'https://github.com/dk6251?tab=repositories'
+    url: 'https://github.com/dkxSec?tab=repositories'
   - label: 'RSS'
-    url: 'https://dk6251.github.io/rss.xml'
+    url: 'https://dkxsec.github.io//rss.xml'
 skills:
   - category: 'Languages'
     items:

@@ -40,6 +40,20 @@
   - 在线上页面复核头像裁切位置与指标卡中文注解密度
   - 如需统一中文气质，可再评估是否替换更多局部标题字体
 
+### Main / Homepage Comment Follow-up
+
+- 完成事项：
+  - 为 `Published Posts` 与 `Focus Tracks` 指标卡补齐中文标签与注解
+  - 将 `查看全部项目`、`查看全部文章` 链接改为微软雅黑并加粗
+- 修改文件：
+  - `src/pages/index.astro`
+- 验证：
+  - 使用 `.\tools\build.ps1` 完成 Astro 静态构建，通过
+- 风险 / 遗留：
+  - 当前“查看全部”链接已从等宽字风格切到中文字体，若后续继续统一 section 顶部语言气质，可能还需同步调整标题行
+- 下一步建议：
+  - 浏览器里复核两处链接在桌面端和移动端的字重与间距
+
 ### Main / Homepage UI Light Refresh
 
 - 完成事项：
