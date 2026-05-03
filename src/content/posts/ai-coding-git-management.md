@@ -1,12 +1,15 @@
 ---
-title: '文章标题'
-description: '一句话摘要'
+title: 'AI Coding 场景下的 Git 管理'
+description: '在 AI 辅助开发场景里，如何用 Git 保持可回退、可审计、可协作的工程节奏'
 date: 2026-05-03
+updatedDate: 2026-05-03
 draft: false
 featured: false
 readingTime: '7 min'
 tags:
   - 'ai'
+  - 'security'
+  - 'git'
 ---
 
 # AI Coding 场景下的 Git 管理
