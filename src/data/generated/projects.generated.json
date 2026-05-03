@@ -1,0 +1,30 @@
+{
+  "syncedAt": "2026-05-03T13:55:32.446Z",
+  "items": [
+    {
+      "id": "dkxsec-dkxsec-github-io",
+      "repo": "dkxSec/dkxSec.github.io",
+      "title": "dkxSec.github.io",
+      "summary": "基于 Astro 构建的研究型个人站点，用于承载文章、项目与长期技术积累。",
+      "publishedDate": "2026-05-03",
+      "updatedDate": "2026-05-03",
+      "status": "active",
+      "category": "tooling",
+      "stack": [
+        "Astro"
+      ],
+      "repoUrl": "https://github.com/dkxSec/dkxSec.github.io",
+      "liveUrl": "https://dkxsec.github.io/",
+      "featured": true,
+      "sortOrder": 100,
+      "archived": false,
+      "github": {
+        "fullName": "dkxSec/dkxSec.github.io",
+        "language": "Astro",
+        "topics": [],
+        "stars": 0,
+        "forks": 0
+      }
+    }
+  ]
+}

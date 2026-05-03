@@ -20,6 +20,7 @@ git push -u origin main
 1. 打开 GitHub 仓库 `Settings -> Pages`
 2. `Source` 选择 `GitHub Actions`
 3. 可选：在 `Settings -> Secrets and variables -> Actions` 中添加仓库变量 `SITE_URL`
+4. 如需定时同步私有 GitHub 项目数据，再添加 Secret `PROJECT_SYNC_TOKEN`
 
 推荐值：
 
@@ -44,6 +45,8 @@ git push -u origin main
 4. `/rss.xml` 可访问
 5. `sitemap-index.xml` 已生成
 6. 页面标题、导航、外链正常
+7. 如已启用项目同步，`Actions -> Sync GitHub project data` 最近一次运行成功
+8. `src/data/generated/projects.generated.json` 最近一次同步已被提交
 
 ## 5. 后续增强
 

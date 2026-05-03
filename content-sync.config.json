@@ -1,0 +1,12 @@
+{
+  "obsidian": {
+    "sourceDir": "D:\desktop\workplace\博客文章管理",
+    "outputDir": "src/content/posts/generated",
+    "publicDir": "public",
+    "publicAssetBasePath": "/obsidian-assets"
+  },
+  "projects": {
+    "curationFile": "src/data/project-curation.json",
+    "outputFile": "src/data/generated/projects.generated.json"
+  }
+}

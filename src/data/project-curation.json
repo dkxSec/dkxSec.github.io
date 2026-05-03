@@ -1,0 +1,10 @@
+[
+  {
+    "repo": "dkxSec/dkxSec.github.io",
+    "category": "tooling",
+    "status": "active",
+    "featured": true,
+    "summaryOverride": "基于 Astro 构建的研究型个人站点，用于承载文章、项目与长期技术积累。",
+    "sortOrder": 100
+  }
+]
