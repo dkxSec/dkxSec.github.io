@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -31,7 +32,10 @@ export async function syncObsidianPosts(options) {
 		}
 
 		const frontmatter = normalizeFrontmatter(parsed.data, absolutePath);
-		const slug = slugify(frontmatter.slug ?? frontmatter.title ?? path.basename(file, path.extname(file)));
+		const slug = resolveSlug({
+			candidates: [frontmatter.slug, frontmatter.title, path.basename(file, path.extname(file))],
+			seed: file,
+		});
 
 		parsedNotes.push({
 			absolutePath,
@@ -311,12 +315,26 @@ function normalizeLookupKey(value) {
 
 function slugify(value) {
 	return String(value)
-		.normalize('NFKD')
-		.replace(/[\u0300-\u036f]/g, '')
+		.normalize('NFKC')
 		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/[^\p{Letter}\p{Number}]+/gu, '-')
 		.replace(/^-+|-+$/g, '')
 		.replace(/-{2,}/g, '-');
+}
+
+function resolveSlug({ candidates, seed }) {
+	for (const candidate of candidates) {
+		if (!candidate) {
+			continue;
+		}
+
+		const slug = slugify(candidate);
+		if (slug) {
+			return slug;
+		}
+	}
+
+	return `post-${createHash('sha1').update(String(seed)).digest('hex').slice(0, 10)}`;
 }
 
 function isExternalTarget(target) {

@@ -6,7 +6,8 @@ updatedDate: 2026-05-03
 tags:
   - ai
   - security
-publish: true
+slug: ai-coding-git-management
+publish: false
 draft: false
 featured: false
 ---

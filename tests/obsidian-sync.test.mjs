@@ -129,3 +129,44 @@ No description or date.
 		/missing required frontmatter fields/i,
 	);
 });
+
+test('syncObsidianPosts generates a stable slug for Chinese titles without explicit slug', async () => {
+	const root = await mkdtemp(path.join(tmpdir(), 'obsidian-sync-'));
+	tempDirs.push(root);
+
+	const sourceDir = path.join(root, 'vault');
+	const outputDir = path.join(root, 'site-posts');
+	const publicDir = path.join(root, 'public');
+
+	await import('node:fs/promises').then(async ({ mkdir }) => {
+		await mkdir(sourceDir, { recursive: true });
+	});
+
+	await writeFile(
+		path.join(sourceDir, 'git-management.md'),
+		`---
+title: AI Coding 场景下的 Git 管理
+description: 中文标题文章也应该生成稳定 slug
+date: 2026-05-03
+tags:
+  - AI
+publish: true
+---
+正文内容。
+`,
+		'utf8',
+	);
+
+	const result = await syncObsidianPosts({
+		sourceDir,
+		outputDir,
+		publicDir,
+		publicAssetBasePath: '/obsidian-assets',
+	});
+
+	assert.equal(result.posts.length, 1);
+	assert.equal(result.posts[0].slug, 'ai-coding-场景下的-git-管理');
+
+	const generated = await readFile(path.join(outputDir, 'ai-coding-场景下的-git-管理.md'), 'utf8');
+	assert.match(generated, /title: 'AI Coding 场景下的 Git 管理'/);
+});
