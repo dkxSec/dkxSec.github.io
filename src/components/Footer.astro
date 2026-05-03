@@ -1,0 +1,28 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t border-slate-200/8">
+	<div class="site-container py-8 md:py-10">
+		<div class="surface-panel flex flex-col gap-6 px-6 py-6 md:flex-row md:items-end md:justify-between md:px-8">
+			<div class="max-w-2xl space-y-2">
+				<div class="section-title" data-align="start">Contact</div>
+				<p class="text-lg font-semibold tracking-tight text-white">
+					欢迎通过 GitHub 交流项目、研究兴趣和工程实现问题。
+				</p>
+				<p class="text-sm text-slate-400">
+					站点首版采用 Astro + Tailwind CSS + Markdown/MDX 构建，面向 GitHub Pages 静态部署。
+				</p>
+			</div>
+
+			<div class="flex flex-wrap items-center gap-3 text-sm text-slate-400">
+				<a class="button" data-variant="secondary" href="/rss.xml">RSS</a>
+				<a class="button" data-variant="secondary" href="/posts">Posts</a>
+				<a class="button" data-variant="secondary" href="/projects">Projects</a>
+				<span class="font-mono text-xs uppercase tracking-[0.24em] text-slate-500">
+					{year}
+				</span>
+			</div>
+		</div>
+	</div>
+</footer>

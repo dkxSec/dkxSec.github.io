@@ -1,0 +1,14 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'div'> {
+	align?: 'start' | 'end';
+	label?: string;
+}
+
+const { align = 'end', label, class: className, ...props } = Astro.props;
+---
+
+<div class:list={['section-title', className]} data-align={align} {...props}>
+	{label ?? <slot />}
+</div>

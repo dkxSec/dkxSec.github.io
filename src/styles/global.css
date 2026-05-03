@@ -1,0 +1,253 @@
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+@import "tailwindcss";
+
+@theme {
+	--font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+	--font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+	--color-graphite-950: #0f1113;
+	--color-graphite-900: #15191d;
+	--color-graphite-850: #1b2025;
+	--color-graphite-800: #242b31;
+	--color-slate-600: #5f6b76;
+	--color-slate-500: #7b8791;
+	--color-slate-400: #9eabb5;
+	--color-slate-300: #c2ccd4;
+	--color-slate-200: #d9e1e7;
+	--color-slate-100: #ecf1f4;
+	--color-cyan-muted: #86aeb6;
+	--color-cyan-soft: #b8d1d6;
+	--color-cyan-deep: #4f737b;
+
+	--shadow-panel: 0 20px 60px rgba(7, 10, 13, 0.32);
+	--shadow-line: 0 0 0 1px rgba(217, 225, 231, 0.08);
+}
+
+:root {
+	color-scheme: dark;
+	--page-gutter: clamp(1.25rem, 2vw, 2rem);
+	--page-width: min(100% - (var(--page-gutter) * 2), 76rem);
+	--content-width: min(100% - (var(--page-gutter) * 2), 46rem);
+	--surface-base:
+		radial-gradient(circle at top, rgba(79, 115, 123, 0.18), transparent 30%),
+		linear-gradient(180deg, #14181b 0%, #101214 55%, #0c0e10 100%);
+}
+
+@layer base {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		@apply m-0 min-h-screen bg-graphite-950 font-sans text-[17px] leading-7 text-slate-200 antialiased;
+		background-image: var(--surface-base);
+		background-attachment: fixed;
+	}
+
+	a {
+		@apply text-cyan-soft transition-colors duration-200;
+	}
+
+	a:hover {
+		@apply text-white;
+	}
+
+	img {
+		@apply block max-w-full rounded-2xl;
+	}
+
+	code,
+	kbd,
+	samp {
+		@apply font-mono;
+	}
+
+	::selection {
+		@apply bg-cyan-deep/60 text-white;
+	}
+}
+
+@layer components {
+	.site-shell {
+		@apply relative flex min-h-screen flex-col;
+	}
+
+	.site-shell::before {
+		content: "";
+		@apply pointer-events-none fixed inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300/30 to-transparent;
+	}
+
+	.site-main {
+		@apply flex-1 py-12 md:py-16;
+	}
+
+	.site-container {
+		width: var(--page-width);
+		@apply mx-auto;
+	}
+
+	.content-container {
+		width: var(--content-width);
+		@apply mx-auto;
+	}
+
+	.surface-panel {
+		@apply rounded-[1.75rem] border border-slate-200/10 bg-graphite-900/78 backdrop-blur;
+		box-shadow: var(--shadow-panel), var(--shadow-line);
+	}
+
+	.section-title {
+		@apply flex items-center gap-3 font-mono text-[0.72rem] font-medium uppercase tracking-[0.32em] text-slate-400;
+	}
+
+	.section-title::before {
+		content: "";
+		@apply h-px flex-1 bg-gradient-to-r from-cyan-soft/50 to-transparent;
+	}
+
+	.section-title[data-align="start"]::before {
+		@apply basis-14 flex-none;
+	}
+
+	.eyebrow {
+		@apply font-mono text-[0.72rem] uppercase tracking-[0.28em] text-cyan-muted;
+	}
+
+	.button {
+		@apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-200/14 bg-slate-100/6 px-4 py-2 text-sm font-medium text-slate-100 transition duration-200;
+	}
+
+	.button:hover {
+		@apply border-cyan-soft/40 bg-cyan-soft/12 text-white;
+	}
+
+	.button[data-variant="secondary"] {
+		@apply bg-transparent text-slate-300;
+	}
+
+	.button[data-variant="secondary"]:hover {
+		@apply text-white;
+	}
+
+	.card {
+		@apply rounded-[1.75rem] border border-slate-200/10 bg-graphite-900/78 p-6 backdrop-blur;
+		box-shadow: var(--shadow-panel), var(--shadow-line);
+	}
+
+	.tag {
+		@apply inline-flex items-center rounded-full border border-cyan-soft/18 bg-cyan-soft/10 px-3 py-1 font-mono text-[0.72rem] uppercase tracking-[0.18em] text-cyan-soft;
+	}
+
+	.meta-row {
+		@apply flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-400;
+	}
+
+	.article-body {
+		@apply text-[1.02rem] leading-8 text-slate-200;
+	}
+
+	.article-body > :first-child {
+		@apply mt-0;
+	}
+
+	.article-body > :last-child {
+		@apply mb-0;
+	}
+
+	.article-body :where(h2, h3, h4) {
+		@apply mt-12 scroll-mt-28 font-semibold tracking-tight text-white;
+	}
+
+	.article-body h2 {
+		@apply text-3xl;
+	}
+
+	.article-body h3 {
+		@apply text-2xl;
+	}
+
+	.article-body h4 {
+		@apply text-xl;
+	}
+
+	.article-body :where(p, ul, ol, blockquote, pre, table, figure) {
+		@apply my-6;
+	}
+
+	.article-body :where(ul, ol) {
+		@apply space-y-3 pl-6;
+	}
+
+	.article-body li::marker {
+		@apply text-cyan-muted;
+	}
+
+	.article-body strong {
+		@apply font-semibold text-white;
+	}
+
+	.article-body hr {
+		@apply my-10 border-0 border-t border-slate-200/10;
+	}
+
+	.article-body blockquote {
+		@apply rounded-r-2xl border-l-2 border-cyan-soft/40 bg-slate-100/5 px-6 py-4 text-slate-300;
+	}
+
+	.article-body pre {
+		@apply overflow-x-auto rounded-3xl border border-slate-200/10 bg-[#0a0d10] p-5 text-[0.92rem];
+	}
+
+	.article-body pre code {
+		@apply bg-transparent p-0 text-slate-100;
+	}
+
+	.article-body :not(pre) > code {
+		@apply rounded-md bg-slate-100/8 px-1.5 py-0.5 text-[0.92em] text-cyan-soft;
+	}
+
+	.article-body table {
+		@apply w-full border-collapse text-left text-sm;
+	}
+
+	.article-body th,
+	.article-body td {
+		@apply border-b border-slate-200/10 px-3 py-3;
+	}
+
+	.article-body th {
+		@apply font-semibold text-slate-100;
+	}
+
+	.article-body figcaption {
+		@apply mt-3 text-center text-sm text-slate-500;
+	}
+}
+
+@layer utilities {
+	.text-balance {
+		text-wrap: balance;
+	}
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}

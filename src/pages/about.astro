@@ -1,0 +1,51 @@
+---
+import { getEntry, render } from 'astro:content';
+import Card from '../components/Card.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import Tag from '../components/Tag.astro';
+import MainLayout from '../layouts/MainLayout.astro';
+
+const site = await getEntry('site', 'home');
+
+if (!site) {
+	throw new Error('Missing site/home content entry.');
+}
+
+const { Content } = await render(site);
+---
+
+<MainLayout title={`About · ${site.data.name}`} description={site.data.description} contentClass="max-w-none">
+	<section class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
+		<div class="space-y-7">
+			<SectionHeading align="start">About</SectionHeading>
+			<div class="space-y-4">
+				<h1 class="text-4xl font-semibold tracking-tight text-white md:text-5xl">
+					{site.data.name} / {site.data.subtitle}
+				</h1>
+				<p class="max-w-3xl text-lg leading-8 text-slate-300">{site.data.description}</p>
+			</div>
+			<div class="article-body max-w-3xl">
+				<Content />
+			</div>
+		</div>
+
+		<aside class="space-y-5">
+			<Card class="space-y-4">
+				<SectionHeading align="start">Focus</SectionHeading>
+				<div class="flex flex-wrap gap-2">
+					{site.data.focusAreas.map((item) => <Tag>{item}</Tag>)}
+				</div>
+			</Card>
+			<Card class="space-y-4">
+				<SectionHeading align="start">Links</SectionHeading>
+				<div class="grid gap-3 text-sm text-slate-300">
+					{site.data.socialLinks.map((link) => (
+						<a href={link.url} target="_blank" rel="noreferrer" class="no-underline hover:text-white">
+							{link.label}
+						</a>
+					))}
+				</div>
+			</Card>
+		</aside>
+	</section>
+</MainLayout>

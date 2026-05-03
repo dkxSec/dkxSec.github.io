@@ -1,0 +1,19 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props
+	extends HTMLAttributes<'article'>,
+		HTMLAttributes<'div'>,
+		HTMLAttributes<'section'>,
+		HTMLAttributes<'a'> {
+	as?: 'article' | 'div' | 'section' | 'a';
+	compact?: boolean;
+}
+
+const { as = 'article', compact = false, class: className, ...props } = Astro.props;
+const Component = as;
+---
+
+<Component class:list={['card', { 'p-4 md:p-5': compact }, className]} {...props}>
+	<slot />
+</Component>
