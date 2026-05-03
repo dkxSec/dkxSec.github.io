@@ -2,6 +2,26 @@
 
 ## 2026-05-03
 
+### Main / Homepage Motion Pass
+
+- 完成事项：
+  - 按 `Research Grid Motion` 方向为首页加入轻动态层
+  - Hero 区新增浅网格漂移、柔和蓝色光斑、分区进入动画
+  - 右侧代码窗新增缓慢浮动、扫描光和状态点脉冲
+  - 项目卡、文章卡、指标卡、技能矩阵补充克制的 hover / pulse / scan 效果
+  - 增加 `prefers-reduced-motion` 兜底，降低动画可访问性风险
+- 修改文件：
+  - `src/pages/index.astro`
+  - `src/styles/global.css`
+- 验证：
+  - 使用 `.\tools\build.ps1` 完成 Astro 静态构建，通过
+- 风险 / 遗留：
+  - 当前动效主要通过 CSS 完成，仍未做浏览器级逐帧观感校准
+  - 部分文章页和项目页仍沿用旧视觉假设，后续若继续增强全站交互，需先统一其它页面基调
+- 下一步建议：
+  - 在浏览器中重点复核 Hero、项目卡 hover 和技能矩阵 pulse 的强度是否过量
+  - 如需更进一步，可继续加基于滚动的 section reveal，但应继续保持低幅度
+
 ### Main / Homepage UI Light Refresh
 
 - 完成事项：

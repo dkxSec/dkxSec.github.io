@@ -51,6 +51,12 @@
 		scroll-behavior: smooth;
 	}
 
+	@media (prefers-reduced-motion: reduce) {
+		html {
+			scroll-behavior: auto;
+		}
+	}
+
 	body {
 		@apply m-0 min-h-screen bg-slate-100 font-sans text-[17px] leading-7 text-slate-700 antialiased;
 		background-image: var(--surface-base);
