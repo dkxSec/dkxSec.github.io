@@ -18,9 +18,11 @@ const projects = (await getCollection('projects'))
 	.sort((a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf())
 	.slice(0, 3);
 
+const allProjects = await getCollection('projects');
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
 	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 	.slice(0, 3);
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
 
 const categoryLabel: Record<string, string> = {
 	ai: 'AI',
@@ -28,61 +30,118 @@ const categoryLabel: Record<string, string> = {
 	tooling: 'Tooling',
 	research: 'Research',
 };
+
+const metrics = [
+	{ label: 'Featured Projects', value: String(allProjects.length).padStart(2, '0') },
+	{ label: 'Published Posts', value: String(allPosts.length).padStart(2, '0') },
+	{ label: 'Focus Tracks', value: String(site.data.focusAreas.length).padStart(2, '0') },
+];
+
+const skillHighlights = site.data.skills.map((group) => ({
+	...group,
+	preview: group.items.slice(0, 3),
+}));
 ---
 
 <MainLayout title={`${site.data.name} · ${site.data.title}`} description={site.data.description} contentClass="max-w-none">
-	<section class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-end">
-		<div class="space-y-6">
-			<SectionHeading align="start">Research-minded homepage</SectionHeading>
-			<div class="space-y-5">
-				<h1 class="text-balance max-w-5xl text-5xl font-semibold tracking-tight text-white md:text-6xl">
+	<section class="homepage-hero surface-panel overflow-hidden">
+		<div class="hero-grid grid gap-10 px-6 py-8 md:px-8 md:py-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,27rem)] lg:items-center">
+			<div class="space-y-7">
+				<SectionHeading align="start">Research-minded homepage</SectionHeading>
+				<div class="space-y-5">
+					<h1 class="text-balance max-w-5xl text-5xl font-semibold tracking-tight text-graphite-950 md:text-6xl">
 					{site.data.heroTitle}
-				</h1>
-				<p class="eyebrow">{site.data.heroTagline}</p>
-				<p class="max-w-3xl text-lg leading-8 text-slate-300">{site.data.description}</p>
+					</h1>
+					<p class="text-lg font-medium text-blue-deep">{site.data.heroTagline}</p>
+					<p class="max-w-3xl text-lg leading-8 text-slate-600">{site.data.description}</p>
+				</div>
+				<div class="flex flex-wrap gap-3">
+					<Button href="/projects">查看项目</Button>
+					<Button href="/posts" variant="secondary">阅读文章</Button>
+				</div>
+				<div class="flex flex-wrap gap-2">
+					{site.data.focusAreas.map((item) => <Tag>{item}</Tag>)}
+				</div>
+				<div class="grid gap-4 pt-4 md:grid-cols-3">
+					{metrics.map((metric) => (
+						<div class="rounded-[1.5rem] border border-slate-200 bg-white/86 px-4 py-4">
+							<p class="font-mono text-[0.72rem] uppercase tracking-[0.24em] text-slate-500">{metric.label}</p>
+							<p class="mt-3 text-3xl font-semibold tracking-tight text-graphite-950">{metric.value}</p>
+						</div>
+					))}
+				</div>
 			</div>
-			<div class="flex flex-wrap gap-3">
-				<Button href="/projects">查看项目</Button>
-				<Button href="/posts" variant="secondary">阅读文章</Button>
-			</div>
-			<div class="flex flex-wrap gap-2">
-				{site.data.focusAreas.map((item) => <Tag>{item}</Tag>)}
+
+			<div class="space-y-5">
+				<div class="code-panel">
+					<div class="code-panel__top">
+						<div class="code-panel__dots" aria-hidden="true">
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+						<span class="code-panel__file">builder.py</span>
+					</div>
+					<pre class="code-panel__body"><code>{`class Builder:
+    def __init__(self):
+        self.goal = "Research -> Build -> Impact"
+        self.focus = ["AI", "Security", "Systems"]
+
+    def build(self):
+        while True:
+            learn()
+            build()
+            share()
+            improve()`}</code></pre>
+				</div>
+				<Card as="section" class="hero-profile space-y-5 bg-slate-100/70">
+					<div>
+						<p class="eyebrow">Profile</p>
+						<h2 class="mt-3 text-3xl font-semibold tracking-tight text-graphite-950">{site.data.name}</h2>
+						<p class="mt-2 text-sm leading-7 text-slate-600">{site.data.subtitle}</p>
+					</div>
+					<div class="grid gap-3 border-t border-slate-200 pt-5 text-sm text-slate-600">
+						{site.data.socialLinks.map((link) => (
+							<a href={link.url} target="_blank" rel="noreferrer" class="no-underline hover:text-graphite-950">
+								{link.label}
+							</a>
+						))}
+					</div>
+				</Card>
 			</div>
 		</div>
-
-		<Card as="section" class="space-y-5">
-			<div>
-				<p class="eyebrow">Profile</p>
-				<h2 class="mt-3 text-3xl font-semibold tracking-tight text-white">{site.data.name}</h2>
-				<p class="mt-2 text-sm leading-7 text-slate-300">{site.data.subtitle}</p>
-			</div>
-			<div class="grid gap-3 border-t border-slate-200/10 pt-5 text-sm text-slate-300">
-				{site.data.socialLinks.map((link) => (
-					<a href={link.url} target="_blank" rel="noreferrer" class="no-underline hover:text-white">
-						{link.label}
-					</a>
-				))}
-			</div>
-		</Card>
 	</section>
 
-	<section class="mt-16">
-		<SectionHeading>Featured Projects</SectionHeading>
+	<section class="mt-18">
+		<div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+			<SectionHeading>Featured Projects</SectionHeading>
+			<a href="/projects" class="font-mono text-[0.78rem] uppercase tracking-[0.22em] no-underline">
+				查看全部项目
+			</a>
+		</div>
 		<div class="mt-6 grid gap-5 lg:grid-cols-3">
 			{projects.map((project) => (
-				<Card class="flex h-full flex-col gap-5">
+				<Card class="project-card flex h-full flex-col gap-5">
+					<div class="project-card__icon" aria-hidden="true">
+						<span>{project.data.title.slice(0, 2).toUpperCase()}</span>
+					</div>
 					<div class="space-y-3">
-						<p class="eyebrow">{categoryLabel[project.data.category] ?? project.data.category}</p>
-						<h2 class="text-2xl font-semibold tracking-tight text-white">{project.data.title}</h2>
-						<p class="text-sm leading-7 text-slate-300">{project.data.summary}</p>
+						<div class="flex items-center justify-between gap-3">
+							<p class="eyebrow">{categoryLabel[project.data.category] ?? project.data.category}</p>
+							<span class="rounded-full bg-slate-100 px-3 py-1 font-mono text-[0.72rem] uppercase tracking-[0.18em] text-slate-500">
+								{project.data.status}
+							</span>
+						</div>
+						<h2 class="text-2xl font-semibold tracking-tight text-graphite-950">{project.data.title}</h2>
+						<p class="text-sm leading-7 text-slate-600">{project.data.summary}</p>
 					</div>
 					<div class="flex flex-wrap gap-2">
 						{project.data.stack.map((item) => <Tag>{item}</Tag>)}
 					</div>
-					<div class="meta-row mt-auto border-t border-slate-200/10 pt-4">
+					<div class="meta-row mt-auto border-t border-slate-200 pt-4">
 						<FormattedDate date={project.data.publishedDate} />
 						{project.data.repoUrl && (
-							<a href={project.data.repoUrl} target="_blank" rel="noreferrer" class="no-underline hover:text-white">
+							<a href={project.data.repoUrl} target="_blank" rel="noreferrer" class="no-underline hover:text-graphite-950">
 								Repository
 							</a>
 						)}
@@ -92,38 +151,275 @@ const categoryLabel: Record<string, string> = {
 		</div>
 	</section>
 
-	<section class="mt-16">
-		<SectionHeading>Latest Writing</SectionHeading>
+	<section class="mt-18">
+		<div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+			<SectionHeading>Latest Writing</SectionHeading>
+			<a href="/posts" class="font-mono text-[0.78rem] uppercase tracking-[0.22em] no-underline">
+				查看全部文章
+			</a>
+		</div>
 		<div class="mt-6 grid gap-4">
-			{posts.map((post) => (
-				<Card as="a" href={`/posts/${post.id}/`} class="grid gap-4 no-underline transition hover:border-cyan-soft/30 hover:bg-slate-100/[0.04] md:grid-cols-[minmax(0,1fr)_10rem] md:items-end">
+			{posts.map((post, index) => (
+				<Card
+					as="a"
+					href={`/posts/${post.id}/`}
+					class="writing-card grid gap-5 no-underline transition hover:-translate-y-0.5 hover:border-blue-soft md:grid-cols-[12rem_minmax(0,1fr)_9rem] md:items-center"
+				>
+					<div class="writing-card__visual" data-visual={index + 1}>
+						<div class="writing-card__grid"></div>
+						<div class="writing-card__frame">
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					</div>
 					<div class="space-y-3">
 						<div class="flex flex-wrap gap-2">
 							{post.data.tags.map((tag) => <Tag>{tag}</Tag>)}
 						</div>
-						<h2 class="text-2xl font-semibold tracking-tight text-white">{post.data.title}</h2>
-						<p class="text-sm leading-7 text-slate-300">{post.data.description}</p>
+						<h2 class="text-2xl font-semibold tracking-tight text-graphite-950">{post.data.title}</h2>
+						<p class="text-sm leading-7 text-slate-600">{post.data.description}</p>
 					</div>
-					<div class="space-y-2 text-sm text-slate-400 md:text-right">
+					<div class="space-y-3 border-slate-200 text-sm text-slate-500 md:border-l md:pl-6">
 						<FormattedDate date={post.data.date} />
 						<p class="font-mono text-[0.78rem] uppercase tracking-[0.18em] text-slate-500">{post.data.readingTime}</p>
+						<span class="inline-flex items-center gap-2 font-medium text-blue-deep">
+							阅读全文
+							<span aria-hidden="true">→</span>
+						</span>
 					</div>
 				</Card>
 			))}
 		</div>
 	</section>
 
-	<section class="mt-16">
+	<section class="mt-18">
 		<SectionHeading>Skill Matrix</SectionHeading>
-		<div class="mt-6 grid gap-5 lg:grid-cols-4">
-			{site.data.skills.map((group) => (
-				<Card class="space-y-4">
-					<h2 class="eyebrow">{group.category}</h2>
-					<ul class="space-y-3 text-sm leading-6 text-slate-300">
-						{group.items.map((item) => <li>{item}</li>)}
-					</ul>
-				</Card>
-			))}
+		<div class="mt-6">
+			<div class="skill-board overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_18px_42px_rgba(28,43,67,0.06)]">
+				<div class="grid gap-px bg-slate-200 lg:grid-cols-4">
+					{skillHighlights.map((group) => (
+						<div class="bg-white px-6 py-6">
+							<p class="font-mono text-[0.76rem] uppercase tracking-[0.24em] text-blue-deep">{group.category}</p>
+							<ul class="mt-5 space-y-3">
+								{group.items.map((item, itemIndex) => (
+									<li class="flex items-center justify-between gap-3 text-sm text-slate-600">
+										<span>{item}</span>
+										<span class="skill-dots" aria-hidden="true" data-level={Math.max(3, 5 - itemIndex)}>
+											<i></i><i></i><i></i><i></i><i></i>
+										</span>
+									</li>
+								))}
+							</ul>
+							<p class="mt-6 text-xs leading-6 text-slate-500">
+								{group.preview.join(' / ')}
+							</p>
+						</div>
+					))}
+				</div>
+			</div>
 		</div>
 	</section>
 </MainLayout>
+
+<style>
+	.mt-18 {
+		margin-top: 4.5rem;
+	}
+
+	.homepage-hero {
+		position: relative;
+		border-radius: 2rem;
+	}
+
+	.homepage-hero::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+		background-size: 2.75rem 2.75rem;
+		mask-image: radial-gradient(circle at center, black 42%, transparent 92%);
+		pointer-events: none;
+	}
+
+	.hero-grid {
+		position: relative;
+		z-index: 1;
+	}
+
+	.code-panel {
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 1.75rem;
+		background:
+			radial-gradient(circle at top right, rgba(84, 121, 179, 0.12), transparent 35%),
+			linear-gradient(180deg, #171b23 0%, #11151c 100%);
+		box-shadow: 0 28px 60px rgba(15, 23, 42, 0.18);
+	}
+
+	.code-panel__top {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1rem 1.25rem;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	.code-panel__dots {
+		display: inline-flex;
+		gap: 0.35rem;
+	}
+
+	.code-panel__dots span {
+		width: 0.55rem;
+		height: 0.55rem;
+		border-radius: 9999px;
+		background: rgba(255, 255, 255, 0.28);
+	}
+
+	.code-panel__file {
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: rgba(226, 232, 240, 0.58);
+	}
+
+	.code-panel__body {
+		margin: 0;
+		padding: 1.4rem 1.25rem 1.6rem;
+		overflow-x: auto;
+		font-family: var(--font-mono);
+		font-size: 0.92rem;
+		line-height: 1.9;
+		color: #d8e1f1;
+	}
+
+	.hero-profile {
+		position: relative;
+	}
+
+	.project-card {
+		position: relative;
+	}
+
+	.project-card__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 3.4rem;
+		height: 3.4rem;
+		border-radius: 1.25rem;
+		border: 1px solid var(--color-slate-200);
+		background: linear-gradient(180deg, #fff 0%, #eef3fb 100%);
+		font-family: var(--font-mono);
+		font-size: 0.86rem;
+		letter-spacing: 0.08em;
+		color: var(--color-blue-ink);
+	}
+
+	.writing-card__visual {
+		position: relative;
+		min-height: 8.2rem;
+		overflow: hidden;
+		border-radius: 1.5rem;
+		border: 1px solid rgba(148, 163, 184, 0.3);
+		background: linear-gradient(180deg, #141922 0%, #0e1219 100%);
+	}
+
+	.writing-card__grid {
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+		background-size: 1.4rem 1.4rem;
+		opacity: 0.4;
+	}
+
+	.writing-card__frame {
+		position: absolute;
+		inset: 1.1rem;
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		align-items: end;
+		gap: 0.7rem;
+	}
+
+	.writing-card__frame span {
+		display: block;
+		height: 100%;
+		border-radius: 9999px;
+		background: linear-gradient(180deg, rgba(84, 121, 179, 0.9), rgba(84, 121, 179, 0.12));
+	}
+
+	.writing-card__visual[data-visual="2"] .writing-card__frame span:nth-child(1) {
+		height: 42%;
+	}
+
+	.writing-card__visual[data-visual="2"] .writing-card__frame span:nth-child(2) {
+		height: 78%;
+	}
+
+	.writing-card__visual[data-visual="2"] .writing-card__frame span:nth-child(3) {
+		height: 56%;
+	}
+
+	.writing-card__visual[data-visual="1"] .writing-card__frame span:nth-child(1) {
+		height: 70%;
+	}
+
+	.writing-card__visual[data-visual="1"] .writing-card__frame span:nth-child(2) {
+		height: 44%;
+	}
+
+	.writing-card__visual[data-visual="1"] .writing-card__frame span:nth-child(3) {
+		height: 82%;
+	}
+
+	.writing-card__visual[data-visual="3"] .writing-card__frame span:nth-child(1) {
+		height: 58%;
+	}
+
+	.writing-card__visual[data-visual="3"] .writing-card__frame span:nth-child(2) {
+		height: 90%;
+	}
+
+	.writing-card__visual[data-visual="3"] .writing-card__frame span:nth-child(3) {
+		height: 38%;
+	}
+
+	.skill-dots {
+		display: inline-grid;
+		grid-template-columns: repeat(5, 0.4rem);
+		gap: 0.35rem;
+	}
+
+	.skill-dots i {
+		display: block;
+		width: 0.4rem;
+		height: 0.4rem;
+		border-radius: 9999px;
+		background: rgba(84, 121, 179, 0.22);
+	}
+
+	.skill-dots[data-level="5"] i:nth-child(-n + 5),
+	.skill-dots[data-level="4"] i:nth-child(-n + 4),
+	.skill-dots[data-level="3"] i:nth-child(-n + 3),
+	.skill-dots[data-level="2"] i:nth-child(-n + 2),
+	.skill-dots[data-level="1"] i:nth-child(-n + 1) {
+		background: var(--color-blue-deep);
+	}
+
+	@media (max-width: 767px) {
+		.mt-18 {
+			margin-top: 3.5rem;
+		}
+
+		.homepage-hero::before {
+			background-size: 2rem 2rem;
+		}
+	}
+</style>

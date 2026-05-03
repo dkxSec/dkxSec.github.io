@@ -2,27 +2,38 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-16 border-t border-slate-200/8">
-	<div class="site-container py-8 md:py-10">
-		<div class="surface-panel flex flex-col gap-6 px-6 py-6 md:flex-row md:items-end md:justify-between md:px-8">
-			<div class="max-w-2xl space-y-2">
-				<div class="section-title" data-align="start">Contact</div>
-				<p class="text-lg font-semibold tracking-tight text-white">
-					欢迎通过 GitHub 交流项目、研究兴趣和工程实现问题。
+<footer class="mt-20 border-t border-slate-200/70 bg-graphite-950 text-white">
+	<div class="site-container py-10 md:py-12">
+		<div class="grid gap-8 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] md:items-end">
+			<div class="space-y-4">
+				<div class="section-title text-slate-400" data-align="start">Contact</div>
+				<p class="max-w-2xl text-2xl font-semibold tracking-tight text-white">
+					欢迎围绕研究议题、工程实现和安全相关项目进行交流。
 				</p>
-				<p class="text-sm text-slate-400">
-					站点首版采用 Astro + Tailwind CSS + Markdown/MDX 构建，面向 GitHub Pages 静态部署。
+				<p class="max-w-2xl text-sm leading-7 text-slate-300/78">
+					站点采用 Astro + Tailwind CSS + Markdown/MDX 构建，持续沉淀项目、写作与长期技术记录。
 				</p>
 			</div>
 
-			<div class="flex flex-wrap items-center gap-3 text-sm text-slate-400">
-				<a class="button" data-variant="secondary" href="/rss.xml">RSS</a>
-				<a class="button" data-variant="secondary" href="/posts">Posts</a>
-				<a class="button" data-variant="secondary" href="/projects">Projects</a>
-				<span class="font-mono text-xs uppercase tracking-[0.24em] text-slate-500">
-					{year}
-				</span>
+			<div class="grid gap-3 sm:grid-cols-3">
+				<a class="rounded-[1.5rem] border border-white/10 bg-white/6 px-5 py-4 no-underline transition hover:border-white/20 hover:bg-white/10" href="/projects">
+					<p class="font-mono text-[0.72rem] uppercase tracking-[0.26em] text-slate-400">Projects</p>
+					<p class="mt-3 text-base font-medium text-white">查看精选项目</p>
+				</a>
+				<a class="rounded-[1.5rem] border border-white/10 bg-white/6 px-5 py-4 no-underline transition hover:border-white/20 hover:bg-white/10" href="/posts">
+					<p class="font-mono text-[0.72rem] uppercase tracking-[0.26em] text-slate-400">Posts</p>
+					<p class="mt-3 text-base font-medium text-white">阅读最新文章</p>
+				</a>
+				<a class="rounded-[1.5rem] border border-white/10 bg-white/6 px-5 py-4 no-underline transition hover:border-white/20 hover:bg-white/10" href="/rss.xml">
+					<p class="font-mono text-[0.72rem] uppercase tracking-[0.26em] text-slate-400">RSS</p>
+					<p class="mt-3 text-base font-medium text-white">订阅更新</p>
+				</a>
 			</div>
+		</div>
+
+		<div class="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6 text-sm text-slate-400">
+			<p>© {year} dkx. All rights reserved.</p>
+			<p class="font-mono text-xs uppercase tracking-[0.24em] text-slate-500">Research / Build / Share</p>
 		</div>
 	</div>
 </footer>

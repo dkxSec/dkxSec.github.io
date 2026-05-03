@@ -2,6 +2,28 @@
 
 ## 2026-05-03
 
+### Main / Homepage UI Light Refresh
+
+- 完成事项：
+  - 将首页主视觉从深色面板风调整为白底研究员极简风
+  - 重做 Hero 区结构，加入深色代码视窗、轻网格背景和关键指标摘要
+  - 重构精选项目、最新文章、技能矩阵的卡片层次与排版节奏
+  - 同步调整全局浅色 token、顶栏深色导航、页脚联系区和导航链接状态
+- 修改文件：
+  - `src/pages/index.astro`
+  - `src/styles/global.css`
+  - `src/components/Header.astro`
+  - `src/components/HeaderLink.astro`
+  - `src/components/Footer.astro`
+- 验证：
+  - 使用 `.\tools\build.ps1` 完成 Astro 静态构建，通过
+- 风险 / 遗留：
+  - 本轮已把共享基础视觉切到浅色体系，关于页、文章页、项目页虽然可正常构建，但尚未做逐页视觉细修
+  - 目前只完成了构建级验证，尚未进行浏览器实机截图检查
+- 下一步建议：
+  - 打开本地首页做桌面端和移动端视觉复核
+  - 如需更贴近参考稿，可继续补首页插图细节、文章缩略图和更精细的 spacing 微调
+
 ### Main / Coordination
 
 - 完成事项：
