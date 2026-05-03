@@ -1,0 +1,11 @@
+{
+  "repo": "dkxSec/example-repo",
+  "category": "tooling",
+  "status": "active",
+  "featured": false,
+  "summaryOverride": "这个项目的中文展示摘要，优先覆盖 GitHub description。",
+  "titleOverride": "可选：站点上想显示的项目标题",
+  "liveUrlOverride": "https://example.com",
+  "sortOrder": 10,
+  "stack": ["TypeScript", "Astro"]
+}

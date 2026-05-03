@@ -36,6 +36,8 @@ npm run sync:posts
 当前分支里已经有契约测试：
 
 - `tests/obsidian-sync.test.mjs`
+- 推荐写作模板：
+  - `docs/templates/obsidian-post-template.md`
 
 ## 2. GitHub 项目同步
 
@@ -84,6 +86,10 @@ npm run sync:projects
   }
 ]
 ```
+
+也可以直接复制模板：
+
+- `docs/templates/project-curation-entry.template.json`
 
 字段合并策略：
 

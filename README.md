@@ -79,6 +79,7 @@ npm run sync:posts
 - Wiki Link 应被转换为站内 `/posts/<slug>/` 链接
 - 附件引用应被复制到 `public/obsidian-assets/`
 - 现有契约测试见 `tests/obsidian-sync.test.mjs`
+- 可直接复用模板：[docs/templates/obsidian-post-template.md](D:\desktop\AI安全&开发\github个人博客开发\docs\templates\obsidian-post-template.md)
 
 ### GitHub 项目同步
 
@@ -115,6 +116,7 @@ npm run sync:content
 - `liveUrlOverride`
 - `sortOrder`
 - `stack`
+- 模板示例：[docs/templates/project-curation-entry.template.json](D:\desktop\AI安全&开发\github个人博客开发\docs\templates\project-curation-entry.template.json)
 
 覆盖配置示例：
 
