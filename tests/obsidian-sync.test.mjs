@@ -170,3 +170,51 @@ publish: true
 	const generated = await readFile(path.join(outputDir, 'ai-coding-场景下的-git-管理.md'), 'utf8');
 	assert.match(generated, /title: 'AI Coding 场景下的 Git 管理'/);
 });
+
+test('syncObsidianPosts only replaces previously generated files in a shared posts directory', async () => {
+	const root = await mkdtemp(path.join(tmpdir(), 'obsidian-sync-'));
+	tempDirs.push(root);
+
+	const sourceDir = path.join(root, 'vault');
+	const outputDir = path.join(root, 'site-posts');
+	const publicDir = path.join(root, 'public');
+
+	await import('node:fs/promises').then(async ({ mkdir }) => {
+		await mkdir(sourceDir, { recursive: true });
+		await mkdir(outputDir, { recursive: true });
+	});
+
+	await writeFile(path.join(outputDir, 'manual-post.md'), '---\ntitle: keep\n---\n', 'utf8');
+	await writeFile(
+		path.join(outputDir, '.obsidian-sync-manifest.json'),
+		JSON.stringify({ files: ['old-generated.md'] }, null, 2),
+		'utf8',
+	);
+	await writeFile(path.join(outputDir, 'old-generated.md'), 'stale', 'utf8');
+
+	await writeFile(
+		path.join(sourceDir, 'new-post.md'),
+		`---
+title: New Post
+description: Shared output directory should stay safe
+date: 2026-05-03
+tags:
+  - ai
+publish: true
+---
+content
+`,
+		'utf8',
+	);
+
+	await syncObsidianPosts({
+		sourceDir,
+		outputDir,
+		publicDir,
+		publicAssetBasePath: '/obsidian-assets',
+	});
+
+	await assert.doesNotReject(() => readFile(path.join(outputDir, 'manual-post.md'), 'utf8'));
+	await assert.rejects(() => readFile(path.join(outputDir, 'old-generated.md'), 'utf8'));
+	await assert.doesNotReject(() => readFile(path.join(outputDir, 'new-post.md'), 'utf8'));
+});

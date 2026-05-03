@@ -21,7 +21,7 @@ npm run sync:posts
 同步约定：
 
 - 仅同步 `publish: true` 的笔记。
-- 文章目标目录默认是 `src/content/posts/generated/`。
+- 文章目标目录默认是 `src/content/posts/`。
 - 附件目标目录是 `public/obsidian-assets/<slug>/`。
 - 公开文章至少需要这些 frontmatter：
   - `title`
@@ -29,6 +29,11 @@ npm run sync:posts
   - `date`
   - `tags`
   - `publish`
+- 推荐补充这些字段，便于长期维护：
+  - `updatedDate`
+  - `slug`
+  - `draft`
+  - `featured`
 - 同步时应额外完成两件事：
   - 把 `[[Wiki Link]]` 规范化为站内 `/posts/<slug>/` 链接。
   - 把 Obsidian 附件引用复制到 `public/obsidian-assets/` 并改写为公开 URL。
@@ -38,6 +43,7 @@ npm run sync:posts
 - `tests/obsidian-sync.test.mjs`
 - 推荐写作模板：
   - `docs/templates/obsidian-post-template.md`
+- 同步脚本会在输出目录维护 `.obsidian-sync-manifest.json`，只清理自己上一次生成的文章，不会删除你手写维护的文章文件。
 
 ## 2. GitHub 项目同步
 
@@ -129,4 +135,10 @@ npm run sync:projects
 
 ```powershell
 npm run sync:content
+```
+
+- 如果你希望把“同步内容 + 构建 + git add/commit/push”合并成一步，直接执行：
+
+```powershell
+.\tools\publish-content.ps1
 ```

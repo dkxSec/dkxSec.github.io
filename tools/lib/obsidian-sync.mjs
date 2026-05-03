@@ -6,6 +6,7 @@ import matter from 'gray-matter';
 
 const MARKDOWN_EXTENSIONS = new Set(['.md', '.mdx']);
 const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.avif']);
+const MANIFEST_FILE_NAME = '.obsidian-sync-manifest.json';
 
 export async function syncObsidianPosts(options) {
 	const sourceDir = path.resolve(options.sourceDir);
@@ -16,6 +17,7 @@ export async function syncObsidianPosts(options) {
 	await ensureDirectory(sourceDir, 'Obsidian source directory');
 	await mkdir(outputDir, { recursive: true });
 	await mkdir(publicDir, { recursive: true });
+	await cleanupPreviousOutputs(outputDir);
 
 	const files = await listFiles(sourceDir);
 	const noteFiles = files.filter((file) => MARKDOWN_EXTENSIONS.has(path.extname(file).toLowerCase()));
@@ -47,9 +49,6 @@ export async function syncObsidianPosts(options) {
 	}
 
 	const linkMap = buildLinkMap(parsedNotes);
-	await rm(outputDir, { recursive: true, force: true });
-	await mkdir(outputDir, { recursive: true });
-
 	const posts = [];
 
 	for (const note of parsedNotes) {
@@ -79,6 +78,8 @@ export async function syncObsidianPosts(options) {
 			outputPath: path.join(outputDir, `${note.slug}.md`),
 		});
 	}
+
+	await writeManifest(outputDir, posts.map((post) => path.basename(post.outputPath)));
 
 	return { posts };
 }
@@ -307,6 +308,32 @@ async function ensureDirectory(directoryPath, label) {
 
 		throw error;
 	}
+}
+
+async function cleanupPreviousOutputs(outputDir) {
+	const manifestPath = path.join(outputDir, MANIFEST_FILE_NAME);
+
+	try {
+		const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+		for (const fileName of manifest.files ?? []) {
+			await rm(path.join(outputDir, fileName), { force: true });
+		}
+	} catch (error) {
+		if (!(error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT')) {
+			throw error;
+		}
+	}
+
+	await rm(manifestPath, { force: true });
+}
+
+async function writeManifest(outputDir, files) {
+	const manifestPath = path.join(outputDir, MANIFEST_FILE_NAME);
+	await writeFile(
+		manifestPath,
+		`${JSON.stringify({ files: files.sort() }, null, 2)}\n`,
+		'utf8',
+	);
 }
 
 function normalizeLookupKey(value) {

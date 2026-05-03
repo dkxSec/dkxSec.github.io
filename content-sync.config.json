@@ -1,7 +1,7 @@
 {
   "obsidian": {
     "sourceDir": "D:\\desktop\\workplace\\博客文章管理",
-    "outputDir": "src/content/posts/generated",
+    "outputDir": "src/content/posts",
     "publicDir": "public",
     "publicAssetBasePath": "/obsidian-assets"
   },

@@ -23,6 +23,7 @@ npm run dev
 .\tools\dev.ps1
 .\tools\build.ps1
 .\tools\preview.ps1
+.\tools\publish-content.ps1
 ```
 
 常用命令：
@@ -55,7 +56,7 @@ npm run dev
 
 仓库当前有两类内容同步能力：
 
-- Obsidian 文章同步：将笔记库里 `publish: true` 的文章整理到 `src/content/posts/generated/`，并把附件复制到 `public/obsidian-assets/<slug>/`
+- Obsidian 文章同步：将笔记库里 `publish: true` 的文章整理到 `src/content/posts/`，并把附件复制到 `public/obsidian-assets/<slug>/`
 - GitHub 项目同步：从白名单仓库拉取数据，预生成 `src/data/generated/projects.generated.json`
 
 ### Obsidian 文章同步
@@ -75,10 +76,11 @@ npm run sync:posts
 
 - 公开文章至少需要 `title`、`description`、`date`、`tags`、`publish`
 - 只有 `publish: true` 的笔记会被同步
-- 输出目录默认是 `src/content/posts/generated/`
+- 输出目录默认是 `src/content/posts/`
 - Wiki Link 应被转换为站内 `/posts/<slug>/` 链接
 - 附件引用应被复制到 `public/obsidian-assets/`
 - 现有契约测试见 `tests/obsidian-sync.test.mjs`
+- 同步脚本会维护 `.obsidian-sync-manifest.json`，只清理它自己生成过的文章文件
 - 可直接复用模板：[docs/templates/obsidian-post-template.md](D:\desktop\AI安全&开发\github个人博客开发\docs\templates\obsidian-post-template.md)
 
 ### GitHub 项目同步
@@ -93,6 +95,18 @@ npm run sync:projects
 
 ```powershell
 npm run sync:content
+```
+
+如果你只是完成了一轮内容更新，想一键同步、构建、提交并推送，可直接执行：
+
+```powershell
+.\tools\publish-content.ps1
+```
+
+自定义提交信息：
+
+```powershell
+.\tools\publish-content.ps1 -CommitMessage "content: add new post and refresh projects"
 ```
 
 仓库新增了 `.github/workflows/sync-github-projects.yml`，用于每天 `02:17 UTC` 自动同步一次项目数据，也支持手动触发。同步结果写入 `src/data/generated/projects.generated.json`，项目页和首页会优先读取这份生成数据。

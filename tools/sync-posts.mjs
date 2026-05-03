@@ -16,7 +16,7 @@ if (!sourceDir) {
 
 const result = await syncObsidianPosts({
 	sourceDir: path.resolve(rootDir, sourceDir),
-	outputDir: path.resolve(rootDir, config.obsidian?.outputDir ?? 'src/content/posts/generated'),
+	outputDir: path.resolve(rootDir, config.obsidian?.outputDir ?? 'src/content/posts'),
 	publicDir: path.resolve(rootDir, config.obsidian?.publicDir ?? 'public'),
 	publicAssetBasePath: config.obsidian?.publicAssetBasePath ?? '/obsidian-assets',
 });
