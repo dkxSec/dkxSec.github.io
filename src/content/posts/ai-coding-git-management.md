@@ -12,12 +12,11 @@ tags:
   - 'git'
 ---
 
-# AI Coding 场景下的 Git 管理
+> **核心原则**
+>
+> 让 AI 改代码前，先把当前稳定状态保存成 Git commit；让 AI 在独立分支上改；改完后测试、人工验证、再提交；确认没问题后再合并回 `main`。
 
-> [!summary]
-> 核心原则：**让 AI 改代码前，先把当前稳定状态保存成 Git commit；让 AI 在独立分支上改；改完后测试、人工验证、再提交；确认没问题后再合并回 `main`。**
-
-## 1. 为什么 AI Coding 必须配合 Git
+## 为什么 AI Coding 必须配合 Git
 
 使用 AI 改项目时，最常见的风险是：
 
@@ -26,7 +25,7 @@ tags:
 - AI 改完后你不知道它到底改了哪些地方。
 - 改坏后只能靠记忆手动恢复。
 
-Git 的作用就是给项目建立“可回退的存档系统”：
+Git 的作用，就是给项目建立一套可回退、可审计、可对比的存档系统：
 
 - `commit`：一次正式存档。
 - `branch`：一个独立开发空间。
@@ -34,10 +33,11 @@ Git 的作用就是给项目建立“可回退的存档系统”：
 - `tag`：给重要版本贴标签，比如 `v1.0`、`v1.1`。
 - `checkout` / `restore` / `reset`：切换或回退版本。
 
-> [!important]
+> **注意**
+>
 > `git add` 不是保存版本，它只是把文件放进“暂存区”。真正能回退的安全存档点是 `git commit`。
 
-## 2. Git 版本文件存在什么地方
+## Git 版本文件存在什么地方
 
 Git 不会在项目里生成 `version1/`、`version2/` 这样的目录。
 
@@ -63,34 +63,39 @@ my-project/
 - 当前看到的 `src/`、`package.json` 等文件，是当前工作区。
 - 切换分支或版本时，Git 会根据 `.git/` 里的记录更新当前工作区文件。
 
-> [!warning]
+> **风险提示**
+>
 > 不要手动删除或修改 `.git/`。删除 `.git/` 后，项目文件还在，但 Git 历史、分支和版本记录会丢失。
 
-## 3. 第一次给项目接入 Git
+## 第一次给项目接入 Git
 
-进入项目目录：
+### 初始化仓库
+
+先进入项目目录：
 
 ```bash
 cd 你的项目目录
 ```
 
-初始化 Git：
+然后初始化 Git：
 
 ```bash
 git init
 ```
 
-查看状态：
+初始化后，先查看当前状态：
 
 ```bash
 git status
 ```
 
+### 准备 `.gitignore`
+
 创建 `.gitignore`，避免提交依赖、构建产物、环境变量和编辑器缓存。
 
 前端 / Node 项目常见 `.gitignore`：
 
-```gitignore
+```text
 node_modules/
 dist/
 build/
@@ -103,7 +108,7 @@ build/
 
 Python 项目常见 `.gitignore`：
 
-```gitignore
+```text
 __pycache__/
 *.pyc
 .venv/
@@ -115,6 +120,8 @@ venv/
 .idea/
 ```
 
+### 创建第一份可回退快照
+
 做第一次完整存档：
 
 ```bash
@@ -124,9 +131,11 @@ git commit -m "chore: initial project snapshot"
 
 从这一步开始，项目就有了第一个可回退的安全版本。
 
-## 4. 让 AI 改功能前的标准流程
+## 让 AI 改功能前的标准流程
 
-每次改功能前，先确认当前项目是否已经保存。
+### 先确认当前状态
+
+每次改功能前，先确认当前项目是否已经保存：
 
 ```bash
 git status
@@ -139,7 +148,9 @@ git add .
 git commit -m "chore: save stable state before AI changes"
 ```
 
-然后从稳定分支创建功能分支：
+### 再创建独立功能分支
+
+从稳定分支创建功能分支：
 
 ```bash
 git checkout main
@@ -148,17 +159,22 @@ git checkout -b feature/功能名
 
 让 AI 在这个功能分支上修改代码。
 
-> [!tip]
+> **实践建议**
+>
 > `main` 分支只放稳定版本。每次功能开发、实验、修复都放到单独分支里。
 
-## 5. AI 改完后的验证流程
+## AI 改完后的验证流程
 
-AI 改完后，先看它改了什么：
+### 先看它改了什么
+
+AI 改完后，先确认改动范围：
 
 ```bash
 git status
 git diff
 ```
+
+### 再跑自动验证和人工验证
 
 如果是前端 / Node 项目，常见验证命令是：
 
@@ -168,13 +184,14 @@ npm run build
 npm run dev
 ```
 
-三个命令的含义不同：
+这三个命令的含义不同：
 
 - `npm test`：运行自动化测试，用测试代码检查主代码。
 - `npm run build`：构建生产版本，检查语法、类型、依赖和打包问题。
 - `npm run dev`：启动开发服务器，方便人工打开浏览器验证功能。
 
-> [!note]
+> **补充说明**
+>
 > 不是所有项目都有这三个命令。具体要看 `package.json` 里的 `scripts` 配置。
 
 查看 `package.json`：
@@ -188,6 +205,8 @@ Windows PowerShell：
 ```powershell
 Get-Content package.json
 ```
+
+### 验证通过后再提交和合并
 
 人工验证功能正常后，在功能分支提交：
 
@@ -203,14 +222,16 @@ git checkout main
 git merge feature/功能名
 ```
 
-合并后建议在 `main` 上再验证一次：
+合并后，建议在 `main` 上再验证一次：
 
 ```bash
 npm test
 npm run build
 ```
 
-## 6. 完整安全工作流
+## 完整安全工作流
+
+整体流程可以压缩成下面这条链路：
 
 ```text
 main 当前稳定
@@ -227,7 +248,7 @@ main 当前稳定
 → main 再测试 / 构建一次
 ```
 
-对应命令：
+对应命令如下：
 
 ```bash
 git status
@@ -255,14 +276,15 @@ npm test
 npm run build
 ```
 
-> [!warning]
-> 不要在功能分支没有 commit 的情况下直接切回 `main` 合并。先在功能分支提交，再合并。
+> **风险提示**
+>
+> 不要在功能分支没有 `commit` 的情况下直接切回 `main` 合并。先在功能分支提交，再合并。
 
-## 7. 多个思路怎么保留多个版本
+## 多个思路怎么保留多个版本
 
 如果想先试一个思路，再试另一个思路，推荐使用多个实验分支。
 
-例如尝试登录功能的两个方案：
+例如，尝试登录功能的两个方案：
 
 ```bash
 git checkout main
@@ -323,10 +345,13 @@ git merge experiment/login-plan-b
 git branch -D experiment/login-plan-a
 ```
 
-> [!tip]
+> **实践建议**
+>
 > 一个思路对应一个 `experiment/xxx` 分支。最后选择最满意的分支合并回 `main`。
 
-## 8. 用 tag 保存 v1.0 / v1.1
+## 用 tag 保存 v1.0 / v1.1
+
+### tag 和 commit 的关系
 
 如果你想用“版本号”的方式管理项目，可以使用 Git tag。
 
@@ -367,22 +392,27 @@ git tag v1.1
 git tag
 ```
 
+### 查看旧版本时的安全做法
+
 查看 `v1.0` 状态：
 
 ```bash
 git checkout v1.0
 ```
 
-> [!warning]
+> **风险提示**
+>
 > 直接 `git checkout v1.0` 只是查看旧版本，不建议在这个状态继续开发。
 
-更安全的恢复方式是从 `v1.0` 创建新分支：
+更安全的恢复方式，是从 `v1.0` 创建新分支：
 
 ```bash
 git checkout -b restore/v1.0 v1.0
 ```
 
 确认没问题后，再决定是否让 `main` 回退。
+
+### 什么时候才考虑 `git reset --hard`
 
 如果非常确定要把 `main` 强制回到 `v1.0`：
 
@@ -391,14 +421,15 @@ git checkout main
 git reset --hard v1.0
 ```
 
-> [!danger]
+> **高风险操作**
+>
 > `git reset --hard` 会让当前分支回到指定版本，并丢弃之后的工作区状态。除非非常确定，否则优先使用 `restore/v1.0` 这种恢复分支。
 
-## 9. 改坏了怎么回退
+## 改坏了怎么回退
 
-### 9.1 AI 改了，但还没有 commit
+### 还没有 commit
 
-查看改动：
+先查看改动：
 
 ```bash
 git status
@@ -423,7 +454,7 @@ git clean -fdn
 git clean -fd
 ```
 
-### 9.2 AI 改了，已经 commit，但还没合并 main
+### 已经 commit，但还没合并到 `main`
 
 直接回到 `main`，删除这个功能分支：
 
@@ -432,7 +463,7 @@ git checkout main
 git branch -D feature/功能名
 ```
 
-### 9.3 AI 改了，已经合并 main，想回到 v1.0
+### 已经合并到 `main`
 
 优先创建恢复分支：
 
@@ -442,7 +473,7 @@ git checkout -b restore/v1.0 v1.0
 
 确认恢复分支没问题后，再决定是否让 `main` 回退。
 
-## 10. 常用分支命名
+## 常用分支命名
 
 ```text
 feature/login-page        新功能
@@ -454,7 +485,7 @@ restore/v1.0              恢复旧版本
 docs/git-workflow         文档
 ```
 
-## 11. 常用 commit message
+## 常用 commit message
 
 ```bash
 git commit -m "feat: add user login"
@@ -478,9 +509,9 @@ git commit -m "experiment: try search UI plan A"
 - `chore`：维护性工作。
 - `experiment`：实验性方案。
 
-## 12. 给 AI 的通用 Git 管理提示词
+## 给 AI 的通用 Git 管理提示词
 
-### 12.1 开发新功能
+### 开发新功能
 
 ```text
 请用 Git 安全管理本次开发：
@@ -497,7 +528,7 @@ git commit -m "experiment: try search UI plan A"
 10. 不要执行 git reset --hard、git clean -fd、强制 push、删除分支等危险操作，除非我明确确认。
 ```
 
-### 12.2 更保守：先计划再修改
+### 更保守：先计划再修改
 
 ```text
 请先不要修改代码。
@@ -513,7 +544,7 @@ git commit -m "experiment: try search UI plan A"
 等我确认后，再创建 feature/功能名 分支并开始修改。修改完成后只提交到该分支，不要合并 main。
 ```
 
-### 12.3 同时实验两个方案
+### 同时实验两个方案
 
 ```text
 我想对这个功能尝试两个方案，请分别用两个 Git 分支实现：
@@ -531,7 +562,7 @@ git commit -m "experiment: try search UI plan A"
 6. 最后对比两个方案的优缺点，并告诉我建议合并哪个分支。
 ```
 
-### 12.4 保存为 v1.0，再开发 v1.1
+### 保存为 v1.0，再开发 v1.1
 
 ```text
 请先用 Git 把当前项目保存为 v1.0：
@@ -548,7 +579,7 @@ git commit -m "experiment: try search UI plan A"
 10. 不要执行 reset --hard 或删除分支，除非我明确确认。
 ```
 
-### 12.5 回退到 v1.0
+### 回退到 v1.0
 
 ```text
 我觉得 v1.1 改得不好，请帮我回到 v1.0。
@@ -563,7 +594,7 @@ git commit -m "experiment: try search UI plan A"
 6. 等我确认后，再决定是否让 main 回退到 v1.0。
 ```
 
-### 12.6 审查 AI 的改动
+### 审查 AI 的改动
 
 ```text
 请基于当前 git diff 做一次代码审查。重点检查：
@@ -578,7 +609,7 @@ git commit -m "experiment: try search UI plan A"
 请先列风险和问题，再给出是否建议提交。
 ```
 
-## 13. 命令速查
+## 命令速查
 
 | 场景 | 命令 |
 |---|---|
@@ -601,7 +632,8 @@ git commit -m "experiment: try search UI plan A"
 | 预览将删除的新增文件 | `git clean -fdn` |
 | 删除新增未跟踪文件 | `git clean -fd` |
 
-## 14. 最终记忆口诀
+## 最终记忆口诀
 
-> [!quote]
-> **改前先 commit，开发开分支；改后看 diff，测试再提交；满意合 main，不满意删分支；重要版本打 tag。**
+> **记忆口诀**
+>
+> 改前先 commit，开发开分支；改后看 diff，测试再提交；满意合 `main`，不满意删分支；重要版本打 tag。

@@ -1,69 +1,144 @@
 ---
-import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import type { CollectionEntry } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import MainLayout from './MainLayout.astro';
 
-interface Props {
-	title: string;
-	description: string;
-	pubDate?: Date;
-	date?: Date;
-	updatedDate?: Date;
-	heroImage?: ImageMetadata;
+interface HeadingLink {
+	depth: number;
+	slug: string;
+	text: string;
 }
 
-const { title, description, pubDate, date, updatedDate, heroImage } = Astro.props;
-const publishedAt = pubDate ?? date;
+interface Props {
+	entry: CollectionEntry<'posts'>;
+	headings?: HeadingLink[];
+}
+
+const { entry, headings = [] } = Astro.props;
+const { title, description, date, updatedDate, tags, readingTime } = entry.data;
 ---
 
-<MainLayout title={title} description={description} image={heroImage} contentClass="max-w-none">
-	<article class="mx-auto max-w-5xl">
-		<header class="surface-panel overflow-hidden">
-			<div class="grid gap-8 px-6 py-7 md:px-8 md:py-8">
+<MainLayout title={title} description={description} contentClass="max-w-none">
+	<article class="article-shell mx-auto max-w-6xl">
+		<header class="surface-panel article-header">
+			<div class="article-header-grid">
 				<div class="flex flex-wrap items-center gap-3">
-					<span class="tag">Research Article</span>
-					<div class="eyebrow">Long-form writing</div>
+					<span class="tag">Article</span>
+					{
+						readingTime && (
+							<span class="tag" data-tone="neutral">
+								{readingTime}
+							</span>
+						)
+					}
+					<div class="eyebrow">Structured long-form notes</div>
 				</div>
 
-				<div class="max-w-3xl space-y-4">
-					<h1 class="text-balance text-4xl font-semibold tracking-tight text-white md:text-5xl">
+				<div class="article-intro">
+					<h1 class="text-balance text-4xl font-semibold tracking-tight text-graphite-900 md:text-5xl">
 						{title}
 					</h1>
-					<p class="max-w-2xl text-lg leading-8 text-slate-300">{description}</p>
+					<p class="article-summary">{description}</p>
 				</div>
 
-				<div class="meta-row border-t border-slate-200/10 pt-4">
-					{publishedAt && <span>Published <FormattedDate date={publishedAt} /></span>}
+				<div class="article-meta">
+					<div class="meta-row">
+						<span>
+							Published <FormattedDate date={date} />
+						</span>
+						{
+							updatedDate && (
+								<span>
+									Updated <FormattedDate date={updatedDate} />
+								</span>
+							)
+						}
+						{
+							headings.length > 1 && (
+								<span>{headings.length} sections</span>
+							)
+						}
+					</div>
+
 					{
-						updatedDate && (
-							<span>
-								Updated <FormattedDate date={updatedDate} />
-							</span>
+						tags.length > 0 && (
+							<ul class="article-tags" aria-label="Article tags">
+								{
+									tags.map((tag) => (
+										<li>
+											<span class="tag" data-tone="soft">
+												{tag}
+											</span>
+										</li>
+									))
+								}
+							</ul>
 						)
 					}
 				</div>
 			</div>
-
-			{
-				heroImage && (
-					<div class="border-t border-slate-200/10 bg-[#0b0e11] p-3 md:p-4">
-						<Image
-							width={1280}
-							height={720}
-							src={heroImage}
-							alt=""
-							class="aspect-[16/9] w-full object-cover"
-						/>
-					</div>
-				)
-			}
 		</header>
 
-		<div class="content-container mt-10 md:mt-12">
-			<div class="article-body">
-				<slot />
+		{
+			headings.length > 1 && (
+				<nav class="article-toc article-toc-mobile xl:hidden" aria-label="Table of contents">
+					<div class="article-toc-title">On this page</div>
+					<ul class="article-toc-list">
+						{
+							headings.map((heading) => (
+								<li>
+									<a
+										href={`#${heading.slug}`}
+										class:list={[
+											'article-toc-link',
+											heading.depth > 2 && 'is-nested',
+										]}
+									>
+										{heading.text}
+									</a>
+								</li>
+							))
+						}
+					</ul>
+				</nav>
+			)
+		}
+
+		<div class="article-layout">
+			<div class="article-main">
+				<div class="content-container content-container--article">
+					<div class="article-body">
+						<slot />
+					</div>
+				</div>
 			</div>
+
+			{
+				headings.length > 1 && (
+					<aside class="article-sidebar">
+						<div class="article-sidebar-inner">
+							<div class="article-toc-title">On this page</div>
+							<ul class="article-toc-list">
+								{
+									headings.map((heading) => (
+										<li>
+											<a
+												href={`#${heading.slug}`}
+												class:list={[
+													'article-toc-link',
+													heading.depth > 2 && 'is-nested',
+												]}
+											>
+												{heading.text}
+											</a>
+										</li>
+									))
+								}
+							</ul>
+						</div>
+					</aside>
+				)
+			}
 		</div>
 	</article>
 </MainLayout>

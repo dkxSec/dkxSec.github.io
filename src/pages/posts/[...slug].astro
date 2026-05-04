@@ -1,6 +1,7 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
+import { getTocHeadings } from '../../lib/post-layout';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -17,8 +18,9 @@ interface Props {
 
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
+const tocHeadings = getTocHeadings(headings);
 ---
 
-<PostLayout entry={entry} headings={headings}>
+<PostLayout entry={entry} headings={tocHeadings}>
 	<Content />
 </PostLayout>

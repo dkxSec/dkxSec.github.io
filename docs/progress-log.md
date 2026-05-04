@@ -1,6 +1,60 @@
 # Progress Log
 
+## 2026-05-04
+
+### Main / Article Reading Structure Refinement
+
+- 完成事项：
+  - 新增文章页实施计划 `docs/plans/2026-05-04-article-layout-implementation.md`，明确本轮排版收口范围
+  - 修正文章详情页数据透传，`PostLayout` 现在直接消费真实文章元信息，不再出现头部标题和摘要层失真
+  - 为文章页接入基于 headings 的目录侧栏与移动端目录区块，增强长文导航能力
+  - 收紧正文排版节奏，统一首段、标题、链接、列表、引用块、代码块与表格的阅读样式
+  - 为目录过滤逻辑补充测试 `tests/post-layout.test.mjs`
+  - 重构代表文章 `ai-coding-git-management.md` 与 `building-an-ai-security-workflow.md`，移除正文重复 H1，并把不受支持的提示块写法改成当前样式体系可稳定呈现的结构
+- 修改文件：
+  - `docs/plans/2026-05-04-article-layout-implementation.md`
+  - `docs/progress-log.md`
+  - `src/lib/post-layout.ts`
+  - `src/pages/posts/[...slug].astro`
+  - `src/layouts/PostLayout.astro`
+  - `src/styles/global.css`
+  - `src/content/posts/ai-coding-git-management.md`
+  - `src/content/posts/building-an-ai-security-workflow.md`
+  - `tests/post-layout.test.mjs`
+- 验证：
+  - `node --test tests/post-layout.test.mjs`
+  - `npm test`
+  - `.\tools\build.ps1`
+- 风险 / 遗留：
+  - 当前目录侧栏对超长文章会变得较密，若后续文章长度继续上升，可再补“仅展示 H2 + 当前 H3”的压缩策略
+  - 本轮未引入 remark/rehype 级 callout 语法支持，而是先把代表文章内容收口到现有 Markdown 能稳定渲染的结构
+- 下一步建议：
+  - 浏览器中复核长文目录侧栏在桌面端和移动端的占位感与滚动体验
+  - 若后续持续写长文，可再抽象一套统一的“文章导语 / 风险提示 / 命令块”内容模板
+
 ## 2026-05-03
+
+### Main / Cross-Branch Status Confirmation And Publish Automation
+
+- 完成事项：
+  - 对照另一分支的实现记录，确认当前分支已具备 Obsidian 文章同步、GitHub 项目白名单同步、首页与项目页读取生成数据、定时同步 workflow 和配套文档
+  - 额外补齐一键发布脚本 `tools/publish-content.ps1`，用于串联 `sync:content`、`build`、`git add`、`git commit` 和 `git push`
+  - 补充 README 与内容同步说明中的一键发布用法，统一当前分支的实际维护流程
+- 修改文件：
+  - `tools/publish-content.ps1`
+  - `README.md`
+  - `docs/content-sync.md`
+  - `docs/progress-log.md`
+- 验证：
+  - `npm test`
+  - `npm run build`
+  - 复查 `src/lib/project-feed.ts`、`.github/workflows/sync-github-projects.yml`、`package.json` 与同步脚本入口，确认与记录一致
+- 风险 / 遗留：
+  - `docs/autoUpdate.md` 目前仍是未跟踪文件，未纳入这次状态确认和日志整理
+  - `content-sync.config.json` 仍依赖本地真实 Obsidian 目录，首次同步文章前需要用户自行配置
+- 下一步建议：
+  - 实际填充 `src/data/project-curation.json` 中更多精选仓库
+  - 为重点项目补 `src/content/projects` 下的详情 Markdown 内容壳
 
 ### Main / Docs and GitHub Project Sync
 
