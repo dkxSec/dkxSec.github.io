@@ -35,6 +35,7 @@
 	--page-gutter: clamp(1.25rem, 2vw, 2rem);
 	--page-width: min(100% - (var(--page-gutter) * 2), 76rem);
 	--content-width: min(100% - (var(--page-gutter) * 2), 46rem);
+	--site-header-offset: 6.75rem;
 	--surface-base:
 		radial-gradient(circle at top, rgba(84, 121, 179, 0.12), transparent 32%),
 		linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, #f8fafd 42%, #f4f7fb 100%);
@@ -185,6 +186,10 @@
 		@apply grid gap-6;
 	}
 
+	.article-cover {
+		@apply grid gap-5 md:grid-cols-[minmax(0,1.7fr)_minmax(17rem,0.9fr)] md:gap-7;
+	}
+
 	.article-intro {
 		@apply max-w-4xl space-y-4;
 	}
@@ -194,11 +199,37 @@
 	}
 
 	.article-meta {
-		@apply grid gap-4 border-t border-slate-200 pt-4;
+		@apply relative grid gap-4 border-t border-slate-200/80 pt-4 md:border-t-0 md:pt-0 md:pl-7;
+	}
+
+	.article-meta::before {
+		content: "";
+		@apply hidden md:block md:absolute md:inset-y-1 md:left-0 md:w-px md:bg-gradient-to-b md:from-transparent md:via-slate-300 md:to-transparent;
+	}
+
+	.article-info-grid {
+		@apply grid gap-3;
+	}
+
+	.article-info-card {
+		@apply rounded-[1.25rem] border border-slate-200/80 bg-slate-100/78 px-4 py-3;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+	}
+
+	.article-info-label {
+		@apply font-mono text-[0.68rem] uppercase tracking-[0.22em] text-slate-500;
+	}
+
+	.article-info-value {
+		@apply mt-2 text-sm font-medium text-graphite-900;
+	}
+
+	.article-info-muted {
+		@apply text-slate-500;
 	}
 
 	.article-tags {
-		@apply flex flex-wrap gap-2;
+		@apply flex flex-wrap gap-2 border-t border-slate-200/75 pt-4;
 	}
 
 	.article-layout {
@@ -214,7 +245,11 @@
 	}
 
 	.article-sidebar-inner {
-		@apply sticky top-28 rounded-[1.5rem] border border-slate-200/80 bg-white/88 p-4 backdrop-blur;
+		@apply sticky rounded-[1.5rem] border border-slate-200/80 bg-white/88 p-4 backdrop-blur;
+		top: var(--site-header-offset);
+		max-height: calc(100dvh - var(--site-header-offset) - 1.5rem);
+		overflow-y: auto;
+		scrollbar-gutter: stable;
 		box-shadow: var(--shadow-line);
 	}
 
@@ -235,16 +270,65 @@
 		@apply mt-3 space-y-1.5;
 	}
 
+	.article-toc-group + .article-toc-group {
+		@apply border-t border-slate-200/75 pt-2;
+	}
+
 	.article-toc-link {
 		@apply block rounded-xl px-3 py-2 text-sm leading-6 text-slate-600 transition-colors duration-200;
+	}
+
+	.article-toc-link--top {
+		@apply font-medium text-graphite-900;
 	}
 
 	.article-toc-link:hover {
 		@apply bg-slate-100 text-graphite-900;
 	}
 
+	.article-toc-link.is-active {
+		@apply bg-blue-soft text-blue-ink;
+		box-shadow:
+			inset 0 0 0 1px rgba(84, 121, 179, 0.22),
+			inset 3px 0 0 rgba(31, 95, 191, 0.85);
+	}
+
+	.article-toc-link.is-parent-active,
+	.article-toc-group.is-current > .article-toc-link {
+		@apply bg-slate-100 text-graphite-900;
+		box-shadow: inset 0 0 0 1px rgba(222, 229, 238, 0.9);
+	}
+
+	.article-toc-sublist {
+		@apply overflow-hidden pl-2;
+		max-height: 0;
+		opacity: 0;
+		transition:
+			max-height 240ms ease,
+			opacity 180ms ease,
+			margin-top 180ms ease;
+	}
+
+	.article-toc-group.is-current .article-toc-sublist {
+		@apply mt-1;
+		max-height: 24rem;
+		opacity: 1;
+	}
+
 	.article-toc-link.is-nested {
 		@apply pl-6 text-[0.92rem] text-slate-500;
+	}
+
+	.article-sidebar-inner::-webkit-scrollbar {
+		width: 0.55rem;
+	}
+
+	.article-sidebar-inner::-webkit-scrollbar-thumb {
+		@apply rounded-full bg-slate-300;
+	}
+
+	.article-sidebar-inner::-webkit-scrollbar-track {
+		@apply bg-transparent;
 	}
 
 	.article-body {
@@ -265,6 +349,19 @@
 
 	.article-body :where(h1, h2, h3, h4) {
 		@apply mt-12 scroll-mt-28 font-semibold tracking-tight text-graphite-900;
+	}
+
+	.article-body :where(h1, h2, h3, h4):target {
+		@apply rounded-[1rem];
+		background:
+			linear-gradient(90deg, rgba(220, 232, 251, 0.88), rgba(255, 255, 255, 0.28) 78%);
+		box-shadow:
+			inset 3px 0 0 rgba(31, 95, 191, 0.7),
+			0 10px 24px rgba(36, 65, 107, 0.05);
+	}
+
+	.article-body :where(h1, h2, h3, h4).is-arriving-target {
+		animation: article-heading-arrival 720ms ease;
 	}
 
 	.article-body h1 {
@@ -357,6 +454,23 @@
 @layer utilities {
 	.text-balance {
 		text-wrap: balance;
+	}
+}
+
+@keyframes article-heading-arrival {
+	0% {
+		transform: translateX(-5px);
+		filter: saturate(1.02);
+	}
+
+	60% {
+		transform: translateX(0);
+		filter: saturate(1);
+	}
+
+	100% {
+		transform: translateX(0);
+		filter: saturate(1);
 	}
 }
 

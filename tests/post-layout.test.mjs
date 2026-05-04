@@ -15,8 +15,15 @@ test('getTocHeadings keeps only visible article headings in order', async () => 
 	]);
 
 	assert.deepEqual(result, [
-		{ depth: 2, slug: 'why', text: 'Why this matters' },
-		{ depth: 3, slug: 'steps', text: 'Implementation steps' },
-		{ depth: 2, slug: 'wrap-up', text: 'Wrap up' },
+		{
+			slug: 'why',
+			text: 'Why this matters',
+			items: [{ slug: 'steps', text: 'Implementation steps' }],
+		},
+		{
+			slug: 'wrap-up',
+			text: 'Wrap up',
+			items: [],
+		},
 	]);
 });

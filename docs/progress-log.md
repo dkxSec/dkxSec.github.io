@@ -2,6 +2,49 @@
 
 ## 2026-05-04
 
+### Main / Article Abstract Cover And TOC Convergence
+
+- 完成事项：
+  - 将文章头部原先的 Published / Updated / sections 行内信息改为 3 个轻量信息块，并保留标签区
+  - 把文章标题与摘要区改成轻度 abstract cover 式左右分区，在桌面端加入细竖线分隔，维持当前白底研究型视觉
+  - 将目录数据从扁平 H2/H3 收敛为 H2 分组结构，默认突出 H2，仅展开当前 H2 下的 H3
+  - 为目录点击和 hash 到达增加标题轻微到达反馈，帮助用户确认已跳转到目标段落
+- 修改文件：
+  - `docs/progress-log.md`
+  - `src/layouts/PostLayout.astro`
+  - `src/lib/post-layout.ts`
+  - `src/styles/global.css`
+- 验证：
+  - `npm test`
+  - `.\tools\build.ps1`
+- 风险 / 遗留：
+  - 当前目录展开依赖运行时脚本和 IntersectionObserver；若后续引入无脚本降级要求，需要再补纯 CSS/服务端默认展开策略
+  - 标题到达反馈目前采用较轻的背景与位移动画，仍需浏览器里主观复核强度是否合适
+- 下一步建议：
+  - 在长文章里重点复核目录切换时 H3 展开收起的节奏
+  - 视观感决定是否继续压低信息卡边框和阴影强度
+
+### Main / Article TOC Sticky Follow-up
+
+- 完成事项：
+  - 为文章页目录侧栏补充真正的自适应跟随行为，侧栏现在会根据顶部站点导航实际高度计算偏移，不会再在长文中段出现“目录卡片在视口里但内容看不全”的问题
+  - 为桌面端目录卡片增加最大高度与内部滚动，长目录可在卡片内继续浏览
+  - 为文章目录加入当前章节高亮与 `aria-current` 状态，滚动阅读时可更清楚地定位所在章节
+  - 给站点顶部 Header 增加可测量类名，供文章页目录跟随逻辑复用
+- 修改文件：
+  - `docs/progress-log.md`
+  - `src/components/Header.astro`
+  - `src/layouts/PostLayout.astro`
+  - `src/styles/global.css`
+- 验证：
+  - `.\tools\build.ps1`
+- 风险 / 遗留：
+  - 当前目录层级仍是 H2/H3 全量展开，若后续单篇文章继续变长，可再做“仅展开当前 H2 下 H3”的收敛策略
+  - 当前阅读进度只做到 active section 高亮，尚未实现侧栏顶部进度线
+- 下一步建议：
+  - 在浏览器中重点复核桌面端目录侧栏的内部滚动手感与 active 高亮是否足够明显
+  - 若继续做视觉增强，可把文章头部 meta 改成更像 abstract cover 的轻量信息块
+
 ### Main / Article Reading Structure Refinement
 
 - 完成事项：

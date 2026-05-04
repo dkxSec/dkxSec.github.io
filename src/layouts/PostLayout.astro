@@ -4,9 +4,12 @@ import FormattedDate from '../components/FormattedDate.astro';
 import MainLayout from './MainLayout.astro';
 
 interface HeadingLink {
-	depth: number;
 	slug: string;
 	text: string;
+	items: Array<{
+		slug: string;
+		text: string;
+	}>;
 }
 
 interface Props {
@@ -16,6 +19,7 @@ interface Props {
 
 const { entry, headings = [] } = Astro.props;
 const { title, description, date, updatedDate, tags, readingTime } = entry.data;
+const topLevelSectionCount = headings.length;
 ---
 
 <MainLayout title={title} description={description} contentClass="max-w-none">
@@ -34,68 +38,110 @@ const { title, description, date, updatedDate, tags, readingTime } = entry.data;
 					<div class="eyebrow">Structured long-form notes</div>
 				</div>
 
-				<div class="article-intro">
-					<h1 class="text-balance text-4xl font-semibold tracking-tight text-graphite-900 md:text-5xl">
-						{title}
-					</h1>
-					<p class="article-summary">{description}</p>
-				</div>
+				<div class="article-cover">
+					<div class="article-intro">
+						<h1 class="text-balance text-4xl font-semibold tracking-tight text-graphite-900 md:text-5xl">
+							{title}
+						</h1>
+						<p class="article-summary">{description}</p>
+					</div>
 
-				<div class="article-meta">
-					<div class="meta-row">
-						<span>
-							Published <FormattedDate date={date} />
-						</span>
+					<div class="article-meta">
+						<div class="article-info-grid" aria-label="Article metadata">
+							<div class="article-info-card">
+								<div class="article-info-label">Published</div>
+								<div class="article-info-value">
+									<FormattedDate date={date} />
+								</div>
+							</div>
+
+							<div class="article-info-card">
+								<div class="article-info-label">Updated</div>
+								<div class="article-info-value">
+									{
+										updatedDate ? (
+											<FormattedDate date={updatedDate} />
+										) : (
+											<span class="article-info-muted">Original edition</span>
+										)
+									}
+								</div>
+							</div>
+
+							<div class="article-info-card">
+								<div class="article-info-label">Sections</div>
+								<div class="article-info-value">
+									{
+										topLevelSectionCount > 0 ? (
+											`${topLevelSectionCount} sections`
+										) : (
+											<span class="article-info-muted">Short note</span>
+										)
+									}
+								</div>
+							</div>
+						</div>
+
 						{
-							updatedDate && (
-								<span>
-									Updated <FormattedDate date={updatedDate} />
-								</span>
-							)
-						}
-						{
-							headings.length > 1 && (
-								<span>{headings.length} sections</span>
+							tags.length > 0 && (
+								<ul class="article-tags" aria-label="Article tags">
+									{
+										tags.map((tag) => (
+											<li>
+												<span class="tag" data-tone="soft">
+													{tag}
+												</span>
+											</li>
+										))
+									}
+								</ul>
 							)
 						}
 					</div>
-
-					{
-						tags.length > 0 && (
-							<ul class="article-tags" aria-label="Article tags">
-								{
-									tags.map((tag) => (
-										<li>
-											<span class="tag" data-tone="soft">
-												{tag}
-											</span>
-										</li>
-									))
-								}
-							</ul>
-						)
-					}
 				</div>
 			</div>
 		</header>
 
 		{
 			headings.length > 1 && (
-				<nav class="article-toc article-toc-mobile xl:hidden" aria-label="Table of contents">
+				<nav
+					class="article-toc article-toc-mobile xl:hidden"
+					aria-label="Table of contents"
+					data-toc
+				>
 					<div class="article-toc-title">On this page</div>
 					<ul class="article-toc-list">
 						{
 							headings.map((heading) => (
-								<li>
+								<li class="article-toc-group" data-toc-group={heading.slug}>
 									<a
 										href={`#${heading.slug}`}
-										class:list={[
-											'article-toc-link',
-											heading.depth > 2 && 'is-nested',
-										]}
+										class:list={['article-toc-link', 'article-toc-link--top']}
+										data-toc-link={heading.slug}
+										data-toc-parent={heading.slug}
 									>
 										{heading.text}
 									</a>
+									{
+										heading.items.length > 0 && (
+											<ul class="article-toc-sublist">
+												{
+													heading.items.map((item) => (
+														<li>
+															<a
+																href={`#${item.slug}`}
+																class:list={['article-toc-link', 'is-nested']}
+																data-toc-link={item.slug}
+																data-toc-parent={heading.slug}
+															>
+																{item.text}
+															</a>
+														</li>
+													))
+												}
+											</ul>
+										)
+									}
 								</li>
 							))
 						}
@@ -116,21 +162,40 @@ const { title, description, date, updatedDate, tags, readingTime } = entry.data;
 			{
 				headings.length > 1 && (
 					<aside class="article-sidebar">
-						<div class="article-sidebar-inner">
+						<div class="article-sidebar-inner" data-toc>
 							<div class="article-toc-title">On this page</div>
 							<ul class="article-toc-list">
 								{
 									headings.map((heading) => (
-										<li>
+										<li class="article-toc-group" data-toc-group={heading.slug}>
 											<a
 												href={`#${heading.slug}`}
-												class:list={[
-													'article-toc-link',
-													heading.depth > 2 && 'is-nested',
-												]}
+												class:list={['article-toc-link', 'article-toc-link--top']}
+												data-toc-link={heading.slug}
+												data-toc-parent={heading.slug}
 											>
 												{heading.text}
 											</a>
+											{
+												heading.items.length > 0 && (
+													<ul class="article-toc-sublist">
+														{
+															heading.items.map((item) => (
+																<li>
+																	<a
+																		href={`#${item.slug}`}
+																		class:list={['article-toc-link', 'is-nested']}
+																		data-toc-link={item.slug}
+																		data-toc-parent={heading.slug}
+																	>
+																		{item.text}
+																	</a>
+																</li>
+															))
+														}
+													</ul>
+												)
+											}
 										</li>
 									))
 								}
@@ -142,3 +207,133 @@ const { title, description, date, updatedDate, tags, readingTime } = entry.data;
 		</div>
 	</article>
 </MainLayout>
+
+<script>
+	const syncHeaderOffset = () => {
+		const header = document.querySelector('.site-header');
+		const offset = header instanceof HTMLElement ? header.offsetHeight + 16 : 96;
+		document.documentElement.style.setProperty('--site-header-offset', `${offset}px`);
+	};
+
+	const setupTocSpy = () => {
+		const tocBlocks = Array.from(document.querySelectorAll('[data-toc]'));
+		const tocLinks = Array.from(document.querySelectorAll('[data-toc-link]'));
+		const tocGroups = Array.from(document.querySelectorAll('[data-toc-group]'));
+		if (!tocBlocks.length || !tocLinks.length) return;
+
+		const entries = tocLinks
+			.map((link) => {
+				if (!(link instanceof HTMLAnchorElement)) return null;
+				const slug = link.dataset.tocLink;
+				const parentSlug = link.dataset.tocParent;
+				if (!slug) return null;
+				const section = document.getElementById(slug);
+				if (!section) return null;
+				return { slug, parentSlug: parentSlug ?? slug, section };
+			})
+			.filter(Boolean);
+
+		if (!entries.length) return;
+
+		const pulseHeading = (slug) => {
+			if (!slug) return;
+			const heading = document.getElementById(slug);
+			if (!(heading instanceof HTMLElement)) return;
+			heading.classList.remove('is-arriving-target');
+			void heading.offsetWidth;
+			heading.classList.add('is-arriving-target');
+			window.setTimeout(() => heading.classList.remove('is-arriving-target'), 900);
+		};
+
+		const setActive = (slug, parentSlug = slug) => {
+			tocLinks.forEach((link) => {
+				if (!(link instanceof HTMLElement)) return;
+				const isActive = link.dataset.tocLink === slug;
+				link.classList.toggle('is-active', isActive);
+				link.classList.toggle(
+					'is-parent-active',
+					link.dataset.tocLink === parentSlug && parentSlug !== slug,
+				);
+				if (isActive) {
+					link.setAttribute('aria-current', 'location');
+				} else {
+					link.removeAttribute('aria-current');
+				}
+				if (isActive) {
+					link.scrollIntoView({ block: 'nearest' });
+				}
+			});
+
+			tocGroups.forEach((group) => {
+				if (!(group instanceof HTMLElement)) return;
+				group.classList.toggle('is-current', group.dataset.tocGroup === parentSlug);
+			});
+		};
+
+		const getEntry = (slug) => entries.find((entry) => entry.slug === slug);
+
+		let activeSlug = entries[0].slug;
+		let activeParentSlug = entries[0].parentSlug;
+		setActive(activeSlug, activeParentSlug);
+
+		const observer = new IntersectionObserver(
+			(observed) => {
+				const visible = observed
+					.filter((entry) => entry.isIntersecting)
+					.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+				if (!visible.length) return;
+
+				const nextSlug = visible[0].target.id;
+				const nextEntry = getEntry(nextSlug);
+				if (!nextEntry) return;
+				if (nextSlug && nextSlug !== activeSlug) {
+					activeSlug = nextSlug;
+					activeParentSlug = nextEntry.parentSlug;
+					setActive(activeSlug, activeParentSlug);
+				}
+			},
+			{
+				rootMargin: '-18% 0px -60% 0px',
+				threshold: [0, 1],
+			},
+		);
+
+		entries.forEach(({ section }) => observer.observe(section));
+
+		tocLinks.forEach((link) => {
+			link.addEventListener('click', () => {
+				if (!(link instanceof HTMLElement)) return;
+				const slug = link.dataset.tocLink;
+				const parentSlug = link.dataset.tocParent;
+				if (!slug) return;
+				activeSlug = slug;
+				activeParentSlug = parentSlug ?? slug;
+				setActive(activeSlug, activeParentSlug);
+				window.setTimeout(() => pulseHeading(slug), 180);
+			});
+		});
+
+		const syncHashState = () => {
+			const slug = decodeURIComponent(window.location.hash.replace(/^#/, ''));
+			if (!slug) return;
+			const entry = getEntry(slug);
+			if (entry) {
+				activeSlug = entry.slug;
+				activeParentSlug = entry.parentSlug;
+				setActive(activeSlug, activeParentSlug);
+			}
+			pulseHeading(slug);
+		};
+
+		if (window.location.hash) {
+			window.setTimeout(syncHashState, 120);
+		}
+
+		window.addEventListener('hashchange', syncHashState);
+	};
+
+	syncHeaderOffset();
+	setupTocSpy();
+	window.addEventListener('resize', syncHeaderOffset, { passive: true });
+</script>
