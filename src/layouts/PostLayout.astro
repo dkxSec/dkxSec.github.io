@@ -259,9 +259,6 @@ const topLevelSectionCount = headings.length;
 				} else {
 					link.removeAttribute('aria-current');
 				}
-				if (isActive) {
-					link.scrollIntoView({ block: 'nearest' });
-				}
 			});
 
 			tocGroups.forEach((group) => {

@@ -10,14 +10,14 @@
   - 将目录数据从扁平 H2/H3 收敛为 H2 分组结构，默认突出 H2，仅展开当前 H2 下的 H3
   - 为目录点击和 hash 到达增加标题轻微到达反馈，帮助用户确认已跳转到目标段落
   - 移除目录侧栏的内部滚动容器，避免鼠标停在目录区域时滚轮被侧栏吞掉，导致正文看起来无法继续下滑
+  - 移除目录激活时对目录链接本身的 `scrollIntoView` 调用，避免点击目录后页面又被脚本强行滚回目录区，造成“目录不能正常跳转”的假象
 - 修改文件：
   - `docs/progress-log.md`
   - `src/layouts/PostLayout.astro`
   - `src/lib/post-layout.ts`
   - `src/styles/global.css`
 - 验证：
-  - `npm test`
-  - `.\tools\build.ps1`
+  - 待执行 `.\tools\build.ps1`
 - 风险 / 遗留：
   - 当前目录展开依赖运行时脚本和 IntersectionObserver；若后续引入无脚本降级要求，需要再补纯 CSS/服务端默认展开策略
   - 标题到达反馈目前采用较轻的背景与位移动画，仍需浏览器里主观复核强度是否合适
