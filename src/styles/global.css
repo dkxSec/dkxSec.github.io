@@ -247,9 +247,6 @@
 	.article-sidebar-inner {
 		@apply sticky rounded-[1.5rem] border border-slate-200/80 bg-white/88 p-4 backdrop-blur;
 		top: var(--site-header-offset);
-		max-height: calc(100dvh - var(--site-header-offset) - 1.5rem);
-		overflow-y: auto;
-		scrollbar-gutter: stable;
 		box-shadow: var(--shadow-line);
 	}
 
@@ -317,18 +314,6 @@
 
 	.article-toc-link.is-nested {
 		@apply pl-6 text-[0.92rem] text-slate-500;
-	}
-
-	.article-sidebar-inner::-webkit-scrollbar {
-		width: 0.55rem;
-	}
-
-	.article-sidebar-inner::-webkit-scrollbar-thumb {
-		@apply rounded-full bg-slate-300;
-	}
-
-	.article-sidebar-inner::-webkit-scrollbar-track {
-		@apply bg-transparent;
 	}
 
 	.article-body {
