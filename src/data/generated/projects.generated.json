@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-05-26T06:18:05.012Z",
+  "syncedAt": "2026-05-27T06:41:01.970Z",
   "items": [
     {
       "id": "dkxsec-dkxsec-github-io",
@@ -7,7 +7,7 @@
       "title": "dkxSec.github.io",
       "summary": "基于 Astro 构建的研究型个人站点，用于承载文章、项目与长期技术积累。",
       "publishedDate": "2026-05-03",
-      "updatedDate": "2026-05-25",
+      "updatedDate": "2026-05-26",
       "status": "active",
       "category": "tooling",
       "stack": [
